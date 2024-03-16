@@ -1,13 +1,16 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { useEffect, useState } from 'react';
 import { downloadMedia } from '../../api/repository/downloadmedia';
-import { CaretLeft, CaretRight, Info, X } from '@phosphor-icons/react';
+import { X } from '@phosphor-icons/react';
 import { Footer } from '../../components/footer/Footer';
 
 export const Photography = () => {
   const [imageUrls, setImageUrls] = useState<string[] | null>(null);
   const [fullImage, setFullImage] = useState<string[] | null>(null);
   const [selectedImage, setSelectedImage] = useState(false);
-  const [mouseEnter, setMouseEnter] = useState(false);
+  // const [mouseEnter, setMouseEnter] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {

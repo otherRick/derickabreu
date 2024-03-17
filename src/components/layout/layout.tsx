@@ -7,7 +7,7 @@ export default function Layout() {
 
   useEffect(() => {
     setTimeout(() => {
-      navigate('/home');
+      navigate('/profile');
     }, 300);
   }, [navigate]);
 
@@ -35,6 +35,9 @@ export default function Layout() {
           </Link>
           <Link to='/contract' className='hover:text-gray-300'>
             <p className={location.pathname === '/contract' ? 'text-gray-400' : ''}>CONTRATAR</p>
+          </Link>
+          <Link to='/profile' className='hover:text-gray-300'>
+            <p className={location.pathname === '/profile' ? 'text-gray-400' : ''}>PERFIL</p>
           </Link>
         </div>
       </div>

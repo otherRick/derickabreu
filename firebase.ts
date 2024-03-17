@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAnalytics, logEvent } from 'firebase/analytics';
+import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyB1_ZxOl551pzufio9UirXDZ_KDIMh8apw',
@@ -15,3 +16,5 @@ export const appFire = initializeApp(firebaseConfig);
 const analytics = getAnalytics(appFire);
 
 logEvent(analytics, 'notification_received');
+
+export const auth = getAuth(appFire);

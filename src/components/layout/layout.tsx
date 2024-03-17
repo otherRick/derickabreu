@@ -1,15 +1,46 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
+import { userAuth } from '../../../firebase';
+import { User } from 'firebase/auth';
+import { useDispatch } from 'react-redux';
+import { createProfile } from '../../pages/login/slices/loginSlices';
 
 export default function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [user, setUser] = useState<User | null>(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setTimeout(() => {
       navigate('/profile');
     }, 300);
   }, [navigate]);
+
+  useEffect(() => {
+    const unsubscribe = userAuth.onAuthStateChanged((firebaseUser) => {
+      if (firebaseUser) {
+        setUser(firebaseUser);
+
+        dispatch(
+          createProfile({
+            phoneNumber: firebaseUser.phoneNumber,
+            displayName: firebaseUser.displayName,
+            photoURL: firebaseUser.photoURL,
+            uid: firebaseUser.uid
+          })
+        );
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  console.log(user);
 
   return (
     <div className='overflow-hidden md:w-full items-center justify-center md:h-full'>
@@ -39,8 +70,12 @@ export default function Layout() {
           <Link to='/profile' className='hover:text-gray-300'>
             <p className={location.pathname === '/profile' ? 'text-gray-400' : ''}>PERFIL</p>
           </Link>
+          <Link to='/login' className='hover:text-gray-300'>
+            <p className={location.pathname === '/login' ? 'text-gray-400' : ''}>LOGIN</p>
+          </Link>
         </div>
       </div>
+
       <Outlet />
     </div>
   );

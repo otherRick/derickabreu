@@ -17,4 +17,4 @@ const analytics = getAnalytics(appFire);
 
 logEvent(analytics, 'notification_received');
 
-export const auth = getAuth(appFire);
+export const userAuth = getAuth(appFire);

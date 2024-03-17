@@ -7,7 +7,9 @@ import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import { toast, Toaster } from 'react-hot-toast';
-import { auth } from '../../../firebase';
+import { userAuth } from '../../../firebase';
+import { useDispatch } from 'react-redux';
+import { createProfile } from './slices/loginSlices';
 
 export const LoginSMS = () => {
   const [otp, setOtp] = useState('');
@@ -16,9 +18,11 @@ export const LoginSMS = () => {
   const [showOTP, setShowOTP] = useState(false);
   const [user, setUser] = useState(null);
 
+  const dispatch = useDispatch();
+
   function onCaptchVerify() {
     if (!window.recaptchaVerifier) {
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+      window.recaptchaVerifier = new RecaptchaVerifier(userAuth, 'recaptcha-container', {
         size: 'invisible',
         callback: (response) => {
           onSignup();
@@ -37,12 +41,13 @@ export const LoginSMS = () => {
 
     const formatPh = '+' + ph;
 
-    signInWithPhoneNumber(auth, formatPh, appVerifier)
+    signInWithPhoneNumber(userAuth, formatPh, appVerifier)
       .then((confirmationResult) => {
         window.confirmationResult = confirmationResult;
         setLoading(false);
         setShowOTP(true);
         toast.success('OTP sended successfully!');
+        // localStorage.setItem('firebaseAuthToken', JSON.stringify(confirmationResult));
       })
       .catch((error) => {
         console.log(error);
@@ -55,7 +60,15 @@ export const LoginSMS = () => {
     window.confirmationResult
       .confirm(otp)
       .then(async (res) => {
-        console.log('otp', res.user.phoneNumber, res.user.displayName, res.user.uid);
+        dispatch(
+          createProfile({
+            phoneNumber: res.user.phoneNumber,
+            displayName: res.user.displayName,
+            photoURL: res.user.photoURL,
+            uid: res.user.uid
+          })
+        );
+
         setUser(res.user);
         setLoading(false);
       })

@@ -31,11 +31,11 @@ export const router = createBrowserRouter([
       {
         path: '/profile',
         element: <ProfileUser />
+      },
+      {
+        path: '/login',
+        element: <LoginSMS />
       }
     ]
-  },
-  {
-    path: '/login',
-    element: <LoginSMS />
   }
 ]);

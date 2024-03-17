@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { WaForm } from '../../components/modals/WaForm/Waform';
 import { BCinfo } from './helpers/BCInfo';
 import { DetailsModal } from '../../components/modals/detailsModal/DetailsModal';
+import ReactGA from 'react-ga';
 
 export const Contract = () => {
   const [choosen, setChoosen] = useState({
@@ -26,6 +27,14 @@ export const Contract = () => {
       document.body.style.overflow = 'auto';
     }
   }, [showModal]);
+
+  const ga = () => {
+    ReactGA.event({
+      category: 'Botões',
+      action: 'Clique no botão de download',
+      label: 'Nome do botão'
+    });
+  };
 
   return (
     <>
@@ -57,6 +66,7 @@ export const Contract = () => {
                   onSeeMore={(e) => {
                     setChoosen({ title: e, url, alt, description, details });
                     setOpenModal(true);
+                    ga;
                   }}
                   onClick={(e) => {
                     setShowModal(true);

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { downloadMedia } from '../../api/repository/downloadmedia';
 import { X } from '@phosphor-icons/react';
 import { Footer } from '../../components/footer/Footer';
+import ReactGA from 'react-ga';
 
 export const Photography = () => {
   const [imageUrls, setImageUrls] = useState<string[] | null>(null);
@@ -136,6 +137,14 @@ export const Photography = () => {
     fetchData();
   }, []);
 
+  const ga = () => {
+    ReactGA.event({
+      category: 'Cards',
+      action: 'Clique no card',
+      label: title // Use o título do card como rótulo
+    });
+  };
+
   return (
     <div className='relative'>
       <div>
@@ -146,6 +155,7 @@ export const Photography = () => {
                 onClick={() => {
                   setFullImage(url);
                   setSelectedImage(true);
+                  ga;
                 }}
                 key={index}
                 src={url}

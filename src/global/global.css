@@ -10,7 +10,7 @@
 }
 
 .image-grid img:hover {
-  transform: scale(1.01);
+  transform: scale(1.04);
 }
 .image-grid img {
   transition: transform 0.3s ease-in-out;

@@ -1,8 +1,8 @@
-import { BsFillShieldLockFill, BsTelephoneFill } from 'react-icons/bs';
+import { BsFillShieldLockFill } from 'react-icons/bs';
 import { CgSpinner } from 'react-icons/cg';
 
 import OtpInput from 'otp-input-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
@@ -10,13 +10,17 @@ import { toast, Toaster } from 'react-hot-toast';
 import { userAuth } from '../../../firebase';
 import { useDispatch } from 'react-redux';
 import { createProfile } from './slices/loginSlices';
+import { DeviceMobileSpeaker, X } from '@phosphor-icons/react';
 
-export const LoginSMS = () => {
+export const LoginSMS = ({ open, closeLogin }: { open: boolean; closeLogin: () => void }) => {
   const [otp, setOtp] = useState('');
   const [ph, setPh] = useState('');
   const [loading, setLoading] = useState(false);
   const [showOTP, setShowOTP] = useState(false);
   const [user, setUser] = useState(null);
+  const [hidden, setHidden] = useState(false);
+
+  const modalRef = useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch();
 
@@ -46,7 +50,7 @@ export const LoginSMS = () => {
         window.confirmationResult = confirmationResult;
         setLoading(false);
         setShowOTP(true);
-        toast.success('OTP sended successfully!');
+        toast.success('Código enviado com sucesso!');
         // localStorage.setItem('firebaseAuthToken', JSON.stringify(confirmationResult));
       })
       .catch((error) => {
@@ -60,6 +64,8 @@ export const LoginSMS = () => {
     window.confirmationResult
       .confirm(otp)
       .then(async (res) => {
+        console.log(res);
+
         dispatch(
           createProfile({
             phoneNumber: res.user.phoneNumber,
@@ -71,32 +77,85 @@ export const LoginSMS = () => {
 
         setUser(res.user);
         setLoading(false);
+
+        setHidden(true);
+        setTimeout(() => {
+          closeLogin();
+        }, 2300);
       })
       .catch((err) => {
-        console.log(err);
+        console.log('adasdasd', err);
+        toast.error('Código inválido!');
+        setOtp('');
         setLoading(false);
       });
   }
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        closeLogin();
+      }
+    };
+
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeLogin();
+      }
+    };
+
+    if (open) {
+      document.body.style.overflow = 'hidden';
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleEscKey);
+    } else {
+      document.body.style.overflow = 'auto';
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscKey);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscKey);
+    };
+  }, [open, closeLogin]);
+
   return (
-    <section className='bg-emerald-500 flex items-center justify-center h-screen'>
-      <div>
+    <section
+      style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}
+      className={` ${
+        open ? 'flex' : 'hidden'
+      } flex items-center justify-center h-screen fixed inset-0 z-40 `}
+    >
+      <div
+        className={` ${
+          hidden ? 'bg-transparent' : 'bg-gray-800'
+        } w-fit justify-center flex flex-col`}
+      >
         <Toaster toastOptions={{ duration: 4000 }} />
         <div id='recaptcha-container'></div>
         {user ? (
-          <h2 className='text-center text-white font-medium text-2xl'>👍Login Success</h2>
+          <h2 className='text-center bg-transparent text-white font-medium text-2xl'>
+            👍Logado com sucesso
+          </h2>
         ) : (
           <div className='w-80 flex flex-col gap-4 rounded-lg p-4'>
-            <h1 className='text-center leading-normal text-white font-medium text-3xl mb-6'>
-              Welcome to <br /> CODE A PROGRAM
-            </h1>
+            <div>
+              <h1 className='text-center leading-normal text-white font-medium text-3xl '>
+                Bem-vindo !
+              </h1>
+              <p className='text-white text-sm text-center mb-4'>Tenha acesso exclusivo !!!</p>
+              <p className='text-white text-sm'>
+                Entre com seu número de telefone e receba um sms para logar em seu perfil.
+              </p>
+            </div>
             {showOTP ? (
               <>
                 <div className='bg-white text-emerald-500 w-fit mx-auto p-4 rounded-full'>
                   <BsFillShieldLockFill size={30} />
                 </div>
                 <label htmlFor='otp' className='font-bold text-xl text-white text-center'>
-                  Enter your OTP
+                  Insira o código
                 </label>
                 <OtpInput
                   value={otp}
@@ -112,16 +171,16 @@ export const LoginSMS = () => {
                   className='bg-emerald-600 w-full flex gap-1 items-center justify-center py-2.5 text-white rounded'
                 >
                   {loading && <CgSpinner size={20} className='mt-1 animate-spin' />}
-                  <span>Verify OTP</span>
+                  <span>Verificar</span>
                 </button>
               </>
             ) : (
               <>
                 <div className='bg-white text-emerald-500 w-fit mx-auto p-4 rounded-full'>
-                  <BsTelephoneFill size={30} />
+                  <DeviceMobileSpeaker size={32} />
                 </div>
                 <label htmlFor='' className='font-bold text-xl text-white text-center'>
-                  Verify your phone number
+                  Logar com o número:
                 </label>
                 <PhoneInput country={'in'} value={ph} onChange={setPh} />
                 <button
@@ -129,12 +188,18 @@ export const LoginSMS = () => {
                   className='bg-emerald-600 w-full flex gap-1 items-center justify-center py-2.5 text-white rounded'
                 >
                   {loading && <CgSpinner size={20} className='mt-1 animate-spin' />}
-                  <span>Send code via SMS</span>
+                  <span>Enviar o código via SMS</span>
                 </button>
               </>
             )}
           </div>
         )}
+        <button
+          onClick={closeLogin}
+          className={` ${hidden ? 'hidden' : ''}  underline pb-4 text-gray-400`}
+        >
+          Cancelar
+        </button>
       </div>
     </section>
   );

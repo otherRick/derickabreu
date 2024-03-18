@@ -1,27 +1,24 @@
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { userAuth } from '../../../firebase';
-import { User } from 'firebase/auth';
-import { useDispatch } from 'react-redux';
 import { createProfile } from '../../pages/login/slices/loginSlices';
+import { useDispatch } from 'react-redux';
 
 export default function Layout() {
+  const [userName, setUserName] = useState<SetStateAction<string> | null>('');
   const location = useLocation();
   const navigate = useNavigate();
-  const [user, setUser] = useState<User | null>(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
     setTimeout(() => {
-      navigate('/profile');
+      navigate('/home');
     }, 300);
   }, [navigate]);
 
   useEffect(() => {
     const unsubscribe = userAuth.onAuthStateChanged((firebaseUser) => {
       if (firebaseUser) {
-        setUser(firebaseUser);
-
         dispatch(
           createProfile({
             phoneNumber: firebaseUser.phoneNumber,
@@ -30,17 +27,16 @@ export default function Layout() {
             uid: firebaseUser.uid
           })
         );
-      } else {
-        setUser(null);
+        setUserName(firebaseUser.displayName);
       }
     });
 
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [dispatch]);
 
-  console.log(user);
+  const user = userName?.toString().split(' ')[0].toUpperCase();
 
   return (
     <div className='overflow-hidden md:w-full items-center justify-center md:h-full'>
@@ -67,11 +63,8 @@ export default function Layout() {
           <Link to='/contract' className='hover:text-gray-300'>
             <p className={location.pathname === '/contract' ? 'text-gray-400' : ''}>CONTRATAR</p>
           </Link>
-          <Link to='/profile' className='hover:text-gray-300'>
-            <p className={location.pathname === '/profile' ? 'text-gray-400' : ''}>PERFIL</p>
-          </Link>
-          <Link to='/login' className='hover:text-gray-300'>
-            <p className={location.pathname === '/login' ? 'text-gray-400' : ''}>LOGIN</p>
+          <Link to='/profile' className='hover:text-gray-300 text-yellow-700'>
+            <p className={location.pathname === '/profile' ? 'text-gray-400' : ''}>{user}</p>
           </Link>
         </div>
       </div>

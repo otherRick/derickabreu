@@ -2,14 +2,14 @@ import { BsFillShieldLockFill } from 'react-icons/bs';
 import { CgSpinner } from 'react-icons/cg';
 
 import OtpInput from 'otp-input-react';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import { toast, Toaster } from 'react-hot-toast';
 import { userAuth } from '../../../firebase';
 import { useDispatch } from 'react-redux';
-import { createProfile } from './slices/loginSlices';
+import { ProfileState, createProfile } from './slices/loginSlices';
 import { DeviceMobileSpeaker, X } from '@phosphor-icons/react';
 
 export const LoginSMS = ({ open, closeLogin }: { open: boolean; closeLogin: () => void }) => {
@@ -20,11 +20,11 @@ export const LoginSMS = ({ open, closeLogin }: { open: boolean; closeLogin: () =
   const [user, setUser] = useState(null);
   const [hidden, setHidden] = useState(false);
 
-  const modalRef = useRef<HTMLDivElement>(null);
+  // const modalRef = useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch();
 
-  function onCaptchVerify() {
+  const onCaptchVerify = () => {
     if (!window.recaptchaVerifier) {
       window.recaptchaVerifier = new RecaptchaVerifier(userAuth, 'recaptcha-container', {
         size: 'invisible',
@@ -35,15 +35,17 @@ export const LoginSMS = ({ open, closeLogin }: { open: boolean; closeLogin: () =
         'expired-callback': () => {}
       });
     }
-  }
+  };
 
-  function onSignup() {
+  const onSignup = () => {
     setLoading(true);
     onCaptchVerify();
 
     const appVerifier = window.recaptchaVerifier;
 
     const formatPh = '+' + ph;
+
+    console.log({ userAuth }, { formatPh }, { appVerifier });
 
     signInWithPhoneNumber(userAuth, formatPh, appVerifier)
       .then((confirmationResult) => {
@@ -57,9 +59,9 @@ export const LoginSMS = ({ open, closeLogin }: { open: boolean; closeLogin: () =
         console.log(error);
         setLoading(false);
       });
-  }
+  };
 
-  function onOTPVerify() {
+  const onOTPVerify = () => {
     setLoading(true);
     window.confirmationResult
       .confirm(otp)
@@ -71,6 +73,7 @@ export const LoginSMS = ({ open, closeLogin }: { open: boolean; closeLogin: () =
             phoneNumber: res.user.phoneNumber,
             displayName: res.user.displayName,
             photoURL: res.user.photoURL,
+            email: res.user.email,
             uid: res.user.uid
           })
         );
@@ -83,42 +86,42 @@ export const LoginSMS = ({ open, closeLogin }: { open: boolean; closeLogin: () =
           closeLogin();
         }, 2300);
       })
-      .catch((err) => {
+      .catch((err: string) => {
         console.log('adasdasd', err);
         toast.error('Código inválido!');
         setOtp('');
         setLoading(false);
       });
-  }
+  };
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        closeLogin();
-      }
-    };
+  // useEffect(() => {
+  //   const handleClickOutside = (event: MouseEvent) => {
+  //     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+  //       closeLogin();
+  //     }
+  //   };
 
-    const handleEscKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        closeLogin();
-      }
-    };
+  //   const handleEscKey = (event: KeyboardEvent) => {
+  //     if (event.key === 'Escape') {
+  //       closeLogin();
+  //     }
+  //   };
 
-    if (open) {
-      document.body.style.overflow = 'hidden';
-      document.addEventListener('mousedown', handleClickOutside);
-      document.addEventListener('keydown', handleEscKey);
-    } else {
-      document.body.style.overflow = 'auto';
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleEscKey);
-    }
+  //   if (open) {
+  //     document.body.style.overflow = 'hidden';
+  //     document.addEventListener('mousedown', handleClickOutside);
+  //     document.addEventListener('keydown', handleEscKey);
+  //   } else {
+  //     document.body.style.overflow = 'auto';
+  //     document.removeEventListener('mousedown', handleClickOutside);
+  //     document.removeEventListener('keydown', handleEscKey);
+  //   }
 
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleEscKey);
-    };
-  }, [open, closeLogin]);
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleClickOutside);
+  //     document.removeEventListener('keydown', handleEscKey);
+  //   };
+  // }, [open, closeLogin]);
 
   return (
     <section
@@ -182,7 +185,7 @@ export const LoginSMS = ({ open, closeLogin }: { open: boolean; closeLogin: () =
                 <label htmlFor='' className='font-bold text-xl text-white text-center'>
                   Logar com o número:
                 </label>
-                <PhoneInput country={'in'} value={ph} onChange={setPh} />
+                <PhoneInput country={'br'} value={ph} onChange={setPh} />
                 <button
                   onClick={onSignup}
                   className='bg-emerald-600 w-full flex gap-1 items-center justify-center py-2.5 text-white rounded'

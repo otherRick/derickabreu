@@ -11,13 +11,14 @@ import { Input } from '../../components/input/input';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import ImageUpload from '../../components/importInput/ImportInput';
 import { Footer } from '../../components/footer/Footer';
-import { useNavigate } from 'react-router-dom';
+import { LoginSMS } from '../login/loginSMS';
 
 export const ProfileUser = () => {
   const pro = useSelector((state: RootState) => state.profile);
   const [closeCofirmation, setCloseConfirmation] = useState(true);
   const [editPRofile, setEditProfile] = useState(false);
   const [updateData, setUpdateData] = useState(pro);
+  const [openLogin, setOpenLogin] = useState(false);
   const [showEditPhoto, setShowEditPhoto] = useState(false);
 
   const dispatch = useDispatch();
@@ -103,73 +104,97 @@ export const ProfileUser = () => {
         onCancel={() => setCloseConfirmation(true)}
         hidden={closeCofirmation}
       />
-      <div className='flex flex-col items-center px-20 w-fit'>
-        <div className=' w-40 h-40 rounded-full items-end justify-start flex'>
-          <div
-            onMouseEnter={() => setShowEditPhoto(true)}
-            onMouseLeave={() => setShowEditPhoto(false)}
-            className={`${
-              showEditPhoto && !editPRofile ? '' : 'hidden'
-            } absolute w-fit border border-gray-700 p-1 rounded-md`}
-          >
-            <ImageUpload onImageSelect={handleImageSelect} />
-          </div>
-          <img
-            onMouseEnter={() => setShowEditPhoto(true)}
-            onMouseLeave={() => setShowEditPhoto(false)}
-            className='rounded-full w-40 h-40'
-            src={pro.photoURL}
-            alt='user'
-          />
-        </div>
-        <div className='text-white w-52 gap-2 items-center flex flex-col justify-center space-y-3 py-2'>
-          <Input
-            onChange={(e) => setUpdateData({ ...updateData, displayName: e.target.value })}
-            readOnly={!editPRofile}
-            value={!editPRofile ? pro.displayName : updateData.displayName}
-            type='text'
-            label='nome:'
-          />
-          <div className={` ${editPRofile ? '' : 'hidden'} space-y-3  `}>
-            <Input
-              onChange={(e) => setUpdateData({ ...updateData, email: e.target.value })}
-              readOnly={!editPRofile}
-              value={!editPRofile ? pro.email : updateData.email}
-              type='text'
-              label='email'
-            />
-            <Input
-              onChange={(e) => setUpdateData({ ...updateData, phoneNumber: e.target.value })}
-              readOnly={!editPRofile}
-              value={!editPRofile ? pro.phoneNumber : updateData.phoneNumber}
-              type='text'
-              label='fone:'
-            />
-            <div className='flex flex-col py-4'>
-              <button
-                onClick={saveChanges}
-                className='bg-emerald-700 text-white text-xs p-1 rounded-md font-bold'
+      <LoginSMS closeLogin={() => setOpenLogin(false)} open={openLogin} />
+      {userAuth.currentUser ? (
+        <>
+          <div className=' flex flex-col items-center px-20 w-fit'>
+            <div className=' w-40 h-40 rounded-full items-end justify-start flex'>
+              <div
+                onMouseEnter={() => setShowEditPhoto(true)}
+                onMouseLeave={() => setShowEditPhoto(false)}
+                className={`${
+                  showEditPhoto && !editPRofile ? '' : 'hidden'
+                } absolute w-fit border border-gray-700 p-1 rounded-md`}
               >
-                Salvar
-              </button>
-              <button
-                onClick={() => setEditProfile(false)}
-                className=' underline text-white text-xs p-1 rounded-md'
+                <ImageUpload onImageSelect={handleImageSelect} />
+              </div>
+              <img
+                onMouseEnter={() => setShowEditPhoto(true)}
+                onMouseLeave={() => setShowEditPhoto(false)}
+                className='rounded-full w-40 h-40'
+                src={
+                  pro.photoURL
+                    ? pro.photoURL
+                    : 'https://firebasestorage.googleapis.com/v0/b/portfoto-ac408.appspot.com/o/profile-images%2Fempty.jpeg?alt=media&token=6f348818-785b-4847-9d49-9445e735a589'
+                }
+                alt='user'
+              />
+            </div>
+            <div className='text-white w-52 gap-2 items-center flex flex-col justify-center space-y-3 py-2'>
+              <Input
+                onChange={(e) => setUpdateData({ ...updateData, displayName: e.target.value })}
+                readOnly={!editPRofile}
+                value={!editPRofile ? pro.displayName : updateData.displayName}
+                type='text'
+                label='nome:'
+              />
+              <div className={` ${editPRofile ? '' : 'hidden'} space-y-3  `}>
+                <Input
+                  onChange={(e) => setUpdateData({ ...updateData, email: e.target.value })}
+                  readOnly={!editPRofile}
+                  value={!editPRofile ? pro.email : updateData.email}
+                  type='text'
+                  label='email'
+                />
+                <Input
+                  onChange={(e) => setUpdateData({ ...updateData, phoneNumber: e.target.value })}
+                  readOnly={!editPRofile}
+                  value={!editPRofile ? pro.phoneNumber : updateData.phoneNumber}
+                  type='text'
+                  label='fone:'
+                />
+                <div className='flex flex-col py-4'>
+                  <button
+                    onClick={saveChanges}
+                    className='bg-emerald-700 text-white text-xs p-1 rounded-md font-bold'
+                  >
+                    Salvar
+                  </button>
+                  <button
+                    onClick={() => setEditProfile(false)}
+                    className=' underline text-white text-xs p-1 rounded-md'
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className='py-10 text-sm cursor-pointer flex items-start flex-col w-full'>
+              <p onClick={onEdit} className={`text-gray-200 ${editPRofile && 'hidden'}`}>
+                Editar
+              </p>
+              <p
+                onClick={() => setCloseConfirmation(false)}
+                className='text-red-500 cursor-pointer'
               >
-                Cancelar
-              </button>
+                Sair
+              </p>
             </div>
           </div>
-        </div>
-        <div className='py-10 text-sm cursor-pointer flex items-start flex-col w-full'>
-          <p onClick={onEdit} className={`text-gray-200 ${editPRofile && 'hidden'}`}>
-            Editar
-          </p>
-          <p onClick={() => setCloseConfirmation(false)} className='text-red-500 cursor-pointer'>
-            Sair
-          </p>
-        </div>
-      </div>
+        </>
+      ) : (
+        <>
+          <div className='flex flex-col items-center justify-center h-full gap-40 '>
+            <p className='text-white text-xl text-center'>
+              Entrando com o seu perfil do cliente você terá <br /> acesso a áreas exclusivas do
+              site além de outros beneficios
+            </p>
+            <button className='bg-emerald-700 p-2 rounded-md' onClick={() => setOpenLogin(true)}>
+              Entrar
+            </button>
+          </div>
+        </>
+      )}
       <Footer />
     </section>
   );

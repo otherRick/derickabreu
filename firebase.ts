@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAnalytics, logEvent } from 'firebase/analytics';
 import { getAuth } from 'firebase/auth';
+import { getDatabase } from 'firebase/database';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyB1_ZxOl551pzufio9UirXDZ_KDIMh8apw',
@@ -18,3 +19,5 @@ const analytics = getAnalytics(appFire);
 logEvent(analytics, 'notification_received');
 
 export const userAuth = getAuth(appFire);
+
+export const ptDatabase = getDatabase(appFire);

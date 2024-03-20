@@ -2,14 +2,14 @@ import { BsFillShieldLockFill } from 'react-icons/bs';
 import { CgSpinner } from 'react-icons/cg';
 
 import OtpInput from 'otp-input-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import { toast, Toaster } from 'react-hot-toast';
 import { userAuth } from '../../../firebase';
 import { useDispatch } from 'react-redux';
-import { ProfileState, createProfile } from './slices/loginSlices';
+import { createProfile } from './slices/loginSlices';
 import { DeviceMobileSpeaker, X } from '@phosphor-icons/react';
 
 export const LoginSMS = ({ open, closeLogin }: { open: boolean; closeLogin: () => void }) => {
@@ -29,8 +29,9 @@ export const LoginSMS = ({ open, closeLogin }: { open: boolean; closeLogin: () =
       window.recaptchaVerifier = new RecaptchaVerifier(userAuth, 'recaptcha-container', {
         size: 'invisible',
         callback: (response) => {
-          onSignup();
-          console.log('res', response);
+          setTimeout(() => {
+            onSignup();
+          }, 100);
         },
         'expired-callback': () => {}
       });
@@ -44,8 +45,6 @@ export const LoginSMS = ({ open, closeLogin }: { open: boolean; closeLogin: () =
     const appVerifier = window.recaptchaVerifier;
 
     const formatPh = '+' + ph;
-
-    console.log({ userAuth }, { formatPh }, { appVerifier });
 
     signInWithPhoneNumber(userAuth, formatPh, appVerifier)
       .then((confirmationResult) => {
@@ -144,20 +143,16 @@ export const LoginSMS = ({ open, closeLogin }: { open: boolean; closeLogin: () =
         ) : (
           <div className='w-80 flex flex-col gap-4 rounded-lg p-4'>
             <div>
-              <h1 className='text-center leading-normal text-white font-medium text-3xl '>
-                Bem-vindo !
-              </h1>
-              <p className='text-white text-sm text-center mb-4'>Tenha acesso exclusivo !!!</p>
-              <p className='text-white text-sm'>
+              <p className='text-white text-sm text-center'>
                 Entre com seu número de telefone e receba um sms para logar em seu perfil.
               </p>
             </div>
             {showOTP ? (
               <>
-                <div className='bg-white text-emerald-500 w-fit mx-auto p-4 rounded-full'>
+                <div className=' text-emerald-500 w-fit mx-auto p-4 rounded-full'>
                   <BsFillShieldLockFill size={30} />
                 </div>
-                <label htmlFor='otp' className='font-bold text-xl text-white text-center'>
+                <label htmlFor='otp' className=' text-sm text-white text-center'>
                   Insira o código
                 </label>
                 <OtpInput

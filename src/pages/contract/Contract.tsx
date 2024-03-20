@@ -37,7 +37,7 @@ export const Contract = () => {
   };
 
   return (
-    <>
+    <section className='w-full flex flex-col justify-center items-center'>
       <WaForm choosen={choosen.title} showModal={showModal} onCancel={() => setShowModal(false)} />
       <DetailsModal
         closeModal={() => setOpenModal(false)}
@@ -48,15 +48,15 @@ export const Contract = () => {
         description={choosen.description}
         details={choosen.details}
       />
-      <div className='space-y-10'>
-        <div className='md:px-20 space-y-10 '>
-          <div>
+      <div className='md:px-20 space-y-10 w-fit '>
+        <div className='space-y-10 w-full flex flex-col justify-center items-center '>
+          <div className=' w-full flex flex-col md:items-start'>
             <p className='text-xs md:text-left text-center'>
               Veja informações detalhadas do produto e
             </p>
             <p className='text-lg md:text-left text-center'>Solicite um orçamento !</p>
           </div>
-          <div className=' md:grid-cols-3 md:grid gap-20'>
+          <div className=' md:grid-cols-3 md:grid gap-20 '>
             {BCinfo.map(({ alt, description, details, title, url }, index) => {
               return (
                 <BugetCard
@@ -80,8 +80,10 @@ export const Contract = () => {
             })}
           </div>
         </div>
+      </div>
+      <div className='w-full'>
         <Footer black />
       </div>
-    </>
+    </section>
   );
 };

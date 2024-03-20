@@ -2,7 +2,7 @@ import { Footer } from '../../components/footer/Footer';
 
 export const About = () => {
   return (
-    <div className='py-20'>
+    <section className='w-full'>
       <div className='px-20 md:flex justify-center gap-10'>
         <div className=''>
           <img
@@ -105,6 +105,6 @@ export const About = () => {
         </div>
       </div>
       <Footer black />
-    </div>
+    </section>
   );
 };

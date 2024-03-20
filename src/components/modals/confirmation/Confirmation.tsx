@@ -1,10 +1,11 @@
 interface iConfirmation {
   onConfirm: () => void;
   onCancel: () => void;
+  desire: string;
   hidden: boolean;
 }
 
-export const Confirmation = ({ onConfirm, onCancel, hidden = true }: iConfirmation) => {
+export const Confirmation = ({ desire, onConfirm, onCancel, hidden = true }: iConfirmation) => {
   return (
     <div
       style={{ backgroundColor: ' rgba(0, 0, 0, 0.5)' }}
@@ -13,7 +14,7 @@ export const Confirmation = ({ onConfirm, onCancel, hidden = true }: iConfirmati
       } `}
     >
       <div className='bg-white p-4 gap-4 flex flex-col items-center rounded-md'>
-        <p className=''>Deseja sair de sua conta?</p>
+        <p className=''>Deseja {desire} de sua conta?</p>
         <div className='flex flex-col gap-2 text-xs '>
           <button
             onClick={onConfirm}

@@ -35,3 +35,12 @@ body {
   font-family: 'Lato', sans-serif;
   font-weight: 300; /* Opcional: Defina o peso da fonte desejado */
 }
+
+/* Estilizando a borda de todos os blocos */
+.opt-container > div {
+}
+
+/* Estilizando a borda do bloco em foco */
+.opt-container > div:focus-within {
+  border-color: black !important;
+}

@@ -10,7 +10,7 @@ import { toast, Toaster } from 'react-hot-toast';
 import { userAuth } from '../../../firebase';
 import { useDispatch } from 'react-redux';
 import { createProfile } from './slices/loginSlices';
-import { DeviceMobileSpeaker, X } from '@phosphor-icons/react';
+import { DeviceMobileSpeaker } from '@phosphor-icons/react';
 
 export const LoginSMS = ({ open, closeLogin }: { open: boolean; closeLogin: () => void }) => {
   const [otp, setOtp] = useState('');

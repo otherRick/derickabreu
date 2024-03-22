@@ -1,11 +1,10 @@
-import { get, getDatabase, ref } from 'firebase/database';
+import { get, getDatabase, ref, set } from 'firebase/database';
 import { userAuth } from '../../../../firebase';
-
-import { set } from 'react-ga';
 
 export const clickCounter = (imageId: string) => {
   const user = userAuth.currentUser?.displayName;
   const db = getDatabase();
+
   const dbRef = ref(db, `/images/${imageId}/clicks/${user}`);
   get(dbRef)
     .then((snapshot) => {

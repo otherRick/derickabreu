@@ -46,7 +46,14 @@ export function CommentsBoard({
       const q = query(commentsRef, where('imageId', '==', imageId), orderBy('timestamp'));
 
       const unsubscribe = onSnapshot(q, (snapshot) => {
-        const commentsData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        const commentsData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          userName: doc.data().userName,
+          photoUrl: doc.data().photoUrl,
+          text: doc.data().text,
+          timestamp: doc.data().timestamp,
+          imageId: doc.data().imageId
+        }));
         setComments(commentsData);
       });
 
@@ -75,6 +82,7 @@ export function CommentsBoard({
                   ({ userName, photoUrl, text, timestamp, imageId }, index: number) => {
                     return (
                       <CommentContainer
+                        timestamp={timestamp}
                         comment={text}
                         currentUser={userName}
                         imageId={imageId}

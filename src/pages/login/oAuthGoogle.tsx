@@ -18,12 +18,11 @@ export const OAuthGoogle = ({ closeModal }: { closeModal: () => void }) => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(errorCode);
 
         const email = error.customData.email;
-        // The AuthCredential type that was used.
         const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
+
+        console.error(errorCode, errorMessage, email, credential);
       });
   };
   return (

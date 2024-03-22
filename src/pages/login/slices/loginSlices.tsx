@@ -5,7 +5,7 @@ export interface ProfileState {
   displayName: string | null;
   email: string | null;
   photoURL: string | null;
-  uid: string;
+  uid: string | null;
 }
 
 const initialState: ProfileState = {

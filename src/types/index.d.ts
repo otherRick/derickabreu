@@ -6,3 +6,5 @@ declare global {
     confirmationResult: RecaptchaVerifier;
   }
 }
+
+declare module 'otp-input-react';

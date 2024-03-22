@@ -1,27 +1,26 @@
 import { TrashSimple } from '@phosphor-icons/react';
 import { useState, useEffect } from 'react';
-
 interface ICommentContainer {
   comment: string;
   imageId: string;
   photoUrl: string;
   currentUser: string;
+  timestamp: string;
 }
 
 export const CommentContainer = ({
   comment,
   imageId,
   photoUrl,
+  timestamp,
   currentUser
 }: ICommentContainer) => {
   const [date, setDate] = useState<Date | null>(null);
 
   useEffect(() => {
-    const secondsTimestamp = 1711126586;
-    const milliseconds = secondsTimestamp * 1000;
-    const secondsDate = new Date(milliseconds);
-    setDate(secondsDate);
-  }, []); // Use um array de dependências vazio para garantir que o efeito seja executado apenas uma vez durante a montagem do componente
+    const timestampDate = new Date(timestamp);
+    setDate(timestampDate);
+  }, [timestamp]);
 
   return (
     <div className='space-y-4  p-2 mb-6 '>

@@ -11,7 +11,7 @@ import { CommentBox } from './components/commentBox/CommentBox';
 import { CommentsBoard } from '../../components/commentsBoard/CommentsBoard';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { scrollingState, scrollingToggle } from '../../components/layout/slices/layoutSlices';
+import { scrollingState } from '../../components/layout/slices/layoutSlices';
 import { RootState } from '../../store/stores';
 
 export const Photography = () => {

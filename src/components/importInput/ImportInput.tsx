@@ -17,7 +17,7 @@ const ImageUpload = ({ setEditProfile }: { setEditProfile: () => void }) => {
     }
   };
 
-  const uploadImage = async (file: Blob | Uint8Array | ArrayBuffer) => {
+  const uploadImage = async (file: File) => {
     const imageRef = ref(storage, `profile-images/${file.name}`);
     await uploadBytes(imageRef, file);
     const downloadURL = await getDownloadURL(imageRef);

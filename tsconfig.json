@@ -23,7 +23,8 @@
   },
   "include": [
     "src", // Include your source files
-    "custom.d.ts" // Include your custom declaration file
+    "custom.d.ts", // Include your custom declaration file
+    "extra.d.ts" // Include your custom declaration file
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

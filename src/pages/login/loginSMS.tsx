@@ -17,7 +17,13 @@ export const LoginSMS = ({ open, closeLogin }: { open: boolean; closeLogin: () =
   const [ph, setPh] = useState('');
   const [loading, setLoading] = useState(false);
   const [showOTP, setShowOTP] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<{
+    phoneNumber: string;
+    displayName: string;
+    photoURL: string;
+    email: string;
+    uid: string;
+  }>();
   const [hidden, setHidden] = useState(false);
 
   // const modalRef = useRef<HTMLDivElement>(null);
@@ -28,7 +34,7 @@ export const LoginSMS = ({ open, closeLogin }: { open: boolean; closeLogin: () =
     if (!window.recaptchaVerifier) {
       window.recaptchaVerifier = new RecaptchaVerifier(userAuth, 'recaptcha-container', {
         size: 'invisible',
-        callback: (response) => {
+        callback: () => {
           setTimeout(() => {
             onSignup();
             console.log('solver');
@@ -67,27 +73,35 @@ export const LoginSMS = ({ open, closeLogin }: { open: boolean; closeLogin: () =
     setLoading(true);
     window.confirmationResult
       .confirm(otp)
-      .then(async (res) => {
-        console.log(res);
+      .then(
+        async (res: {
+          user: {
+            phoneNumber: string;
+            displayName: string;
+            photoURL: string;
+            email: string;
+            uid: string;
+          };
+        }) => {
+          dispatch(
+            createProfile({
+              phoneNumber: res.user.phoneNumber,
+              displayName: res.user.displayName,
+              photoURL: res.user.photoURL,
+              email: res.user.email,
+              uid: res.user.uid
+            })
+          );
 
-        dispatch(
-          createProfile({
-            phoneNumber: res.user.phoneNumber,
-            displayName: res.user.displayName,
-            photoURL: res.user.photoURL,
-            email: res.user.email,
-            uid: res.user.uid
-          })
-        );
+          setUser(res.user);
+          setLoading(false);
 
-        setUser(res.user);
-        setLoading(false);
-
-        setHidden(true);
-        setTimeout(() => {
-          closeLogin();
-        }, 2300);
-      })
+          setHidden(true);
+          setTimeout(() => {
+            closeLogin();
+          }, 2300);
+        }
+      )
       .catch((err: string) => {
         console.log('adasdasd', err);
         toast.error('Código inválido!');
@@ -95,36 +109,6 @@ export const LoginSMS = ({ open, closeLogin }: { open: boolean; closeLogin: () =
         setLoading(false);
       });
   };
-
-  // useEffect(() => {
-  //   const handleClickOutside = (event: MouseEvent) => {
-  //     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-  //       closeLogin();
-  //     }
-  //   };
-
-  //   const handleEscKey = (event: KeyboardEvent) => {
-  //     if (event.key === 'Escape') {
-  //       closeLogin();
-  //     }
-  //   };
-
-  //   if (open) {
-  //     document.body.style.overflow = 'hidden';
-  //     document.addEventListener('mousedown', handleClickOutside);
-  //     document.addEventListener('keydown', handleEscKey);
-  //   } else {
-  //     document.body.style.overflow = 'auto';
-  //     document.removeEventListener('mousedown', handleClickOutside);
-  //     document.removeEventListener('keydown', handleEscKey);
-  //   }
-
-  //   return () => {
-  //     document.removeEventListener('mousedown', handleClickOutside);
-  //     document.removeEventListener('keydown', handleEscKey);
-  //   };
-  // }, [open, closeLogin]);
-
   return (
     <section
       style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}

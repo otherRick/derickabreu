@@ -2,7 +2,7 @@ import { BsFillShieldLockFill } from 'react-icons/bs';
 import { CgSpinner } from 'react-icons/cg';
 
 import OtpInput from 'otp-input-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
@@ -31,6 +31,7 @@ export const LoginSMS = ({ open, closeLogin }: { open: boolean; closeLogin: () =
         callback: (response) => {
           setTimeout(() => {
             onSignup();
+            console.log('solver');
           }, 100);
         },
         'expired-callback': () => {}
@@ -43,6 +44,8 @@ export const LoginSMS = ({ open, closeLogin }: { open: boolean; closeLogin: () =
     onCaptchVerify();
 
     const appVerifier = window.recaptchaVerifier;
+
+    console.log('login', appVerifier);
 
     const formatPh = '+' + ph;
 

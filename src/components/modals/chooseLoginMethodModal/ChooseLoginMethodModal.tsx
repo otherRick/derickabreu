@@ -22,7 +22,7 @@ export const ChooseLoginMethodModal = ({
       <div className='bg-white w-96 p-8 rounded-lg items-center flex flex-col'>
         <h2 className='md:text-2xl font-bold mb-6'>Escolha o Método de Login</h2>
         <div className='flex justify-around items-center  border border-gray-500 rounded-md mb-4'>
-          <OAuthGoogle />
+          <OAuthGoogle closeModal={closeLogin} />
         </div>
         <button
           onClick={() => setLoginEmail(true)}

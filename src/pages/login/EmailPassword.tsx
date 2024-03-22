@@ -3,10 +3,14 @@ import 'react-phone-input-2/lib/style.css';
 import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
+  sendEmailVerification,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword
 } from 'firebase/auth';
 import { userAuth } from '../../../firebase';
 import { User } from 'firebase/auth/web-extension';
+import { Confirmation } from '../../components/modals/confirmation/Confirmation';
+import { EnvelopeSimple, Password } from '@phosphor-icons/react';
 
 export const EmailPassword = ({
   open,
@@ -23,13 +27,12 @@ export const EmailPassword = ({
   const [askToCreate, setAskToCreate] = useState(false);
   const [errorMessege, setErrorMessege] = useState('');
   const [user, setUser] = useState<User | null>(null);
-
-  console.log({ errorMessege });
+  const [emailVerifyModal, setEmailVerifyModal] = useState(true);
+  const [emailSentModal, setEmailSentModal] = useState(true);
 
   const onLogin = () => {
     signInWithEmailAndPassword(userAuth, email, password)
       .then((userCredential) => {
-        // Signed in
         const user = userCredential.user;
         console.log(user);
         closeEmailLogin();
@@ -40,12 +43,8 @@ export const EmailPassword = ({
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        // The email of the user's account used.
         const email = error.customData.email;
-        // The AuthCredential type that was used.
         const credential = GoogleAuthProvider.credentialFromError(error);
-        // setPassword('');
-        // console.log(error);
 
         if (errorCode === 'auth/wrong-password') {
           setErrorMessege(errorCode);
@@ -57,24 +56,42 @@ export const EmailPassword = ({
       });
   };
   const onRegister = () => {
-    console.log('oi');
-
     createUserWithEmailAndPassword(userAuth, email, password)
       .then((userCredential) => {
-        // Signed up
+        const users = userAuth?.currentUser as User;
+        const actionCodeSettings = {
+          url: 'https://portfoto-ac408.web.app',
+          handleCodeInApp: true
+        };
+        sendEmailVerification(users, actionCodeSettings)
+          .then(() => {
+            console.log('mandou');
+          })
+          .catch((error) => {
+            console.log(error);
+          });
         const user = userCredential.user;
         setUser(user);
         setTimeout(() => {
           closeLogin();
           setRegisteModal(false);
         }, 4200);
-
-        // ...
       })
       .catch((error) => {
         console.log(error);
+      });
+  };
 
-        // ..
+  const sendRecover = () => {
+    sendPasswordResetEmail(userAuth, email)
+      .then(() => {
+        console.log(' // Password reset email sent!');
+        setEmailSentModal(false);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(error, errorMessage, errorCode);
       });
   };
 
@@ -85,6 +102,37 @@ export const EmailPassword = ({
         open ? 'flex' : 'hidden'
       } flex items-center justify-center h-screen fixed inset-0 z-40`}
     >
+      <Confirmation
+        inputMode
+        type='text'
+        children={<span>Para qual email deseja recuperar sua senha ?</span>}
+        hidden={emailVerifyModal}
+        onCancel={() => setEmailVerifyModal(true)}
+        onConfirm={() => {
+          sendRecover();
+          setEmailVerifyModal(true);
+        }}
+        onChange={(value) => setEmail(value.target.value)}
+        value={email}
+      />
+      <Confirmation
+        closeBtnText='Fechar'
+        children={
+          <div className='flex flex-col items-center gap-6'>
+            <div className='flex items-center '>
+              <EnvelopeSimple size={30} color='black' />
+              <Password size={30} color='black' />
+            </div>
+            <span className='text-center'>
+              Verificação de senha enviada para <br />
+              {email}. <br />
+              Lembre-se conferir na caixa de SPAM{' '}
+            </span>
+          </div>
+        }
+        hidden={emailSentModal}
+        onCancel={() => setEmailSentModal(true)}
+      />
       {registerModal ? (
         <div className='fixed inset-0 flex justify-center items-center p-6 bg-black bg-opacity-50'>
           <div className='bg-white w-96 px-8 p-4 rounded-lg '>
@@ -115,6 +163,9 @@ export const EmailPassword = ({
                 type='password'
                 className={`w-full border border-gray-300 rounded-md py-2 px-3 `}
               />
+              <button onClick={() => setEmailVerifyModal(false)} className='underline text-xs'>
+                Recuperar senha
+              </button>
               <p
                 className={`text-xs text-red-500 ${
                   errorMessege === 'auth/wrong-password' ? '' : 'hidden'
@@ -163,11 +214,11 @@ export const EmailPassword = ({
                   </div>
                 </>
               ) : (
-                <div className='w-fit'>
+                <div className='w-full'>
                   <div className=' flex flex-col gap-6 '>
                     <button
                       onClick={onLogin}
-                      className='bg-blue-500 text-white px-2 py-1 rounded-md'
+                      className='bg-zinc-800 text-white px-2 py-1 rounded-md'
                     >
                       Entrar
                     </button>
@@ -251,81 +302,6 @@ export const EmailPassword = ({
           </div>
         </div>
       )}
-
-      {/* <div
-        className={` ${
-          hidden ? 'bg-transparent' : 'bg-gray-800'
-        } w-fit justify-center flex flex-col`}
-      >
-        <Toaster toastOptions={{ duration: 4000 }} />
-        <div id='recaptcha-container'></div>
-        {user ? (
-          <h2 className='text-center bg-transparent text-white font-medium text-2xl'>
-            👍Logado com sucesso
-          </h2>
-        ) : (
-          <div className='w-80 flex flex-col gap-4 rounded-lg p-4'>
-            <div>
-              <h1 className='text-center leading-normal text-white font-medium text-3xl '>
-                Bem-vindo !
-              </h1>
-              <p className='text-white text-sm text-center mb-4'>Tenha acesso exclusivo !!!</p>
-              <p className='text-white text-sm'>
-                Entre com seu número de telefone e receba um sms para logar em seu perfil.
-              </p>
-            </div>
-            {showOTP ? (
-              <>
-                <div className='bg-white text-emerald-500 w-fit mx-auto p-4 rounded-full'>
-                  <BsFillShieldLockFill size={30} />
-                </div>
-                <label htmlFor='otp' className='font-bold text-xl text-white text-center'>
-                  Insira o código
-                </label>
-                <OtpInput
-                  value={otp}
-                  onChange={setOtp}
-                  OTPLength={6}
-                  otpType='number'
-                  disabled={false}
-                  autoFocus
-                  className='opt-container '
-                ></OtpInput>
-                <button
-                  onClick={onOTPVerify}
-                  className='bg-emerald-600 w-full flex gap-1 items-center justify-center py-2.5 text-white rounded'
-                >
-                  {loading && <CgSpinner size={20} className='mt-1 animate-spin' />}
-                  <span>Verificar</span>
-                </button>
-              </>
-            ) : (
-              <>
-                <div className='bg-white text-emerald-500 w-fit mx-auto p-4 rounded-full'>
-                  <DeviceMobileSpeaker size={32} />
-                </div>
-                <label htmlFor='' className='font-bold text-xl text-white text-center'>
-                  Logar com o número:
-                </label>
-                <PhoneInput country={'br'} value={ph} onChange={setPh} />
-                <button
-                  onClick={onSignup}
-                  className='bg-emerald-600 w-full flex gap-1 items-center justify-center py-2.5 text-white rounded'
-                >
-                  {loading && <CgSpinner size={20} className='mt-1 animate-spin' />}
-                  <span>Enviar o código via SMS</span>
-                </button>
-              </>
-            )}
-          </div>
-        )}
-        <button
-          onClick={closeLogin}
-          className={` ${hidden ? 'hidden' : ''}  underline pb-4 text-gray-400`}
-        >
-          Cancelar
-        </button>
-      </div> */}
     </section>
   );
 };

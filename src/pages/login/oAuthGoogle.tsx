@@ -1,7 +1,7 @@
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { userAuth } from '../../../firebase';
 
-export const OAuthGoogle = () => {
+export const OAuthGoogle = ({ closeModal }: { closeModal: () => void }) => {
   const onClick = () => {
     const provider = new GoogleAuthProvider();
 
@@ -9,6 +9,7 @@ export const OAuthGoogle = () => {
       .then((result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential?.accessToken;
+        closeModal();
         console.log(token);
 
         const user = result.user;

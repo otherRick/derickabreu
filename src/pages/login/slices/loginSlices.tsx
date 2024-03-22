@@ -1,10 +1,10 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 export interface ProfileState {
-  phoneNumber: string;
-  displayName: string;
-  email: string;
-  photoURL: string;
+  phoneNumber: string | null;
+  displayName: string | null;
+  email: string | null;
+  photoURL: string | null;
   uid: string;
 }
 
@@ -28,7 +28,6 @@ export const userProfileData = createSlice({
       state.uid = action.payload.displayName;
     },
     updateUserProfile: (state: ProfileState, action: PayloadAction<Partial<ProfileState>>) => {
-      // Atualiza apenas os campos fornecidos na action payload
       Object.assign(state, action.payload);
     }
   }

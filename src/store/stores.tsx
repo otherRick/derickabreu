@@ -1,13 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
 import userProfileData from '../pages/login/slices/loginSlices';
+import singleImageData from '../pages/photography/slices/imageSlices';
+import scrollingToggle from '../components/layout/slices/layoutSlices';
 
 export const store = configureStore({
   reducer: {
-    profile: userProfileData
+    profile: userProfileData,
+    imageData: singleImageData,
+    layout: scrollingToggle
   }
 });
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+
 export type AppDispatch = typeof store.dispatch;

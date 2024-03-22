@@ -7,7 +7,7 @@ export const Footer = ({ black }: FooterProps) => {
     <div
       className={` ${
         black ? 'bg-black text-white' : 'bg-white text-black'
-      } md:px-10 flex md:justify-end justify-center md:space-x-9 gap-4 py-14 `}
+      } md:px-10 flex md:justify-end justify-center md:space-x-9 w-full gap-4 py-14 `}
     >
       <div className='md:text-lg'>
         <a

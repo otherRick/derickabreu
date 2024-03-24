@@ -4,7 +4,6 @@ import { Eye, Heart, X } from '@phosphor-icons/react';
 import { Footer } from '../../components/footer/Footer';
 import ReactGA from 'react-ga';
 import { userAuth } from '../../../firebase';
-import { LoginSMS } from '../login/loginSMS';
 import { filesToDownload } from './helpers/filesToDownload';
 import { getDatabase, ref, set, onValue, get } from 'firebase/database';
 import { CommentBox } from './components/commentBox/CommentBox';
@@ -13,9 +12,9 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { scrollingState } from '../../components/layout/slices/layoutSlices';
 import { RootState } from '../../store/stores';
+import { ChooseLoginMethodModal } from '../../components/modals/chooseLoginMethodModal/ChooseLoginMethodModal';
 
 export const Photography = () => {
-  const [imageUrls, setImageUrls] = useState<string[] | null>(null);
   const [fullImage, setFullImage] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState(false);
   const [like, setLike] = useState(false);
@@ -31,6 +30,8 @@ export const Photography = () => {
   const dispatch = useDispatch();
 
   const scrolling = useSelector((state: RootState) => state.layout.scrolling);
+  const isLogged = useSelector((state: RootState) => state.userStatus.isLogged);
+  const imageUrls = useSelector((state: RootState) => state.images.imageUrls);
 
   useEffect(() => {
     if (!scrolling) {
@@ -84,18 +85,18 @@ export const Photography = () => {
     });
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const urls = await downloadMedia(filesToDownload);
-        setImageUrls(urls);
-      } catch (error) {
-        console.error('Error fetching media:', error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const urls = await downloadMedia(filesToDownload);
+  //       setImageUrls(urls);
+  //     } catch (error) {
+  //       console.error('Error fetching media:', error);
+  //     }
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
   const ga = () => {
     ReactGA.event({
@@ -113,41 +114,31 @@ export const Photography = () => {
   };
 
   const onLike = () => {
-    userAuth.onAuthStateChanged((firebaseUser) => {
-      if (firebaseUser) {
-        console.log('logged');
+    if (isLogged) {
+      const userId = userAuth.currentUser?.uid;
 
-        document.body.style.overflow = 'hidden';
-      } else {
-        document.body.style.overflow = 'auto';
-        console.log('not logged in');
-        setOpenLogin(true);
+      const db = getDatabase();
+
+      if (!imageId) {
+        console.error('ID da imagem não encontrado');
+        return;
       }
-    });
 
-    const userId = userAuth.currentUser?.uid;
+      const imageRef = ref(db, `images/${imageId}/likes/${userId}`);
 
-    const db = getDatabase();
-
-    if (!imageId) {
-      console.error('ID da imagem não encontrado');
-      return;
-    }
-
-    const imageRef = ref(db, `images/${imageId}/likes/${userId}`);
-
-    console.log('imageRef', imageRef);
-
-    if (like) {
-      set(imageRef, null).catch((error) => {
-        console.error('Erro ao remover a curtida:', error);
-        setLike(!like);
-      });
+      if (like) {
+        set(imageRef, null).catch((error) => {
+          console.error('Erro ao remover a curtida:', error);
+          setLike(!like);
+        });
+      } else {
+        set(imageRef, true).catch((error) => {
+          console.error('Erro ao adicionar a curtida:', error);
+          setLike(!like);
+        });
+      }
     } else {
-      set(imageRef, true).catch((error) => {
-        console.error('Erro ao adicionar a curtida:', error);
-        setLike(!like);
-      });
+      setOpenLogin(true);
     }
   };
 
@@ -198,7 +189,12 @@ export const Photography = () => {
         toggleMenu={() => setToggleCommentBoard(false)}
         isOpen={!toggleCommentBoard}
       />
-      <LoginSMS open={openLogin} closeLogin={() => setOpenLogin(false)} />
+
+      <ChooseLoginMethodModal
+        message='Para poder interagir com as imagens você precisa estar logado!'
+        closeLogin={() => setOpenLogin(false)}
+        openLogin={openLogin}
+      />
       <div>
         {imageUrls ? (
           <div className='image-grid'>

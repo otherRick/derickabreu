@@ -4,6 +4,10 @@ import { userAuth } from '../../../firebase';
 import { createProfile } from '../../pages/login/slices/loginSlices';
 import { useDispatch } from 'react-redux';
 import { child, get, getDatabase, ref } from 'firebase/database';
+import { onLineStatus } from './slices/userStatusSlice';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/stores';
+import { fetchImages } from '../../pages/photography/slices/imageSlices';
 
 export default function Layout() {
   const [userName, setUserName] = useState<string | null>();
@@ -11,6 +15,22 @@ export default function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const status = useSelector((state: RootState) => state.images.status);
+
+  useEffect(() => {
+    userAuth.onAuthStateChanged((firebaseUser) => {
+      if (firebaseUser) {
+        dispatch(onLineStatus(true));
+      } else {
+        dispatch(onLineStatus(false));
+      }
+    });
+  });
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchImages() as never);
+    }
+  }, [status, dispatch]);
 
   useEffect(() => {
     const unsubscribe = userAuth.onAuthStateChanged((firebaseUser) => {

@@ -14,7 +14,7 @@ export function CommentsBoard({
 }: {
   toggleMenu: () => void;
   setSelectedImage: () => void;
-  imageId: string;
+  imageId: string | void;
   isOpen: boolean;
   toggleCommentBoard: boolean;
   selectedImage: boolean;

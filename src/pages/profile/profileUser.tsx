@@ -44,6 +44,18 @@ export const ProfileUser = () => {
 
   const dispatch = useDispatch();
 
+  const overflow = useSelector((state: RootState) => state.layout.scrolling);
+
+  const onToggleMenu = () => {
+    setToggleMenu(!toggleMenu);
+
+    if (!overflow) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  };
+
   useEffect(() => {
     setOriginalData(pro);
     const user = userAuth.currentUser;
@@ -184,7 +196,7 @@ export const ProfileUser = () => {
           onDelete={() => setCloseConfirmationDele(false)}
           loginMethod={loginMethod}
           onEditeProfile={onEdit}
-          toggleMenu={() => setToggleMenu(!toggleMenu)}
+          toggleMenu={onToggleMenu}
           isOpen={toggleMenu}
         />
         <Confirmation

@@ -79,10 +79,10 @@ export const EditableTextInput = ({
           />
         </div>
         <div>
-          <div className='flex flex-col py-4 gap-6 h-full text-sm'>
+          <div className='flex flex-col p-3 py-4 gap-6 h-full'>
             <button
               onClick={saveChanges}
-              className='bg-emerald-700 text-white  p-1 rounded-md font-bold'
+              className='bg-emerald-700 text-white  p-3 rounded-md font-bold'
             >
               Salvar
             </button>

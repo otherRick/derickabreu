@@ -6,9 +6,11 @@ import { useState } from 'react';
 
 export const ChooseLoginMethodModal = ({
   openLogin,
-  closeLogin
+  closeLogin,
+  message
 }: {
   openLogin: boolean;
+  message?: string;
   closeLogin: () => void;
 }) => {
   const [loginEmail, setLoginEmail] = useState(false);
@@ -17,9 +19,10 @@ export const ChooseLoginMethodModal = ({
     <div
       className={` ${
         openLogin ? '' : 'hidden'
-      } fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 p-10`}
+      } fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 p-10 z-20`}
     >
       <div className='bg-white w-96 p-8 rounded-lg items-center flex flex-col'>
+        <h2 className='md:text-xl font-bold mb-6 text-center'>{message}</h2>
         <h2 className='md:text-2xl font-bold mb-6'>Escolha o Método de Login</h2>
         <div className='flex justify-around items-center  border border-gray-500 rounded-md mb-4'>
           <OAuthGoogle closeModal={closeLogin} />

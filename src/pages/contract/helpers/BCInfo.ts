@@ -13,7 +13,7 @@ export const BCinfo: {
   details: React.ReactNode | string | undefined;
 }[] = [
   {
-    title: 'Aniverário Infantil',
+    title: 'Aniversário Infantil',
     url: 'https://firebasestorage.googleapis.com/v0/b/portfoto-ac408.appspot.com/o/best%2Ffestasol.jpg?alt=media&token=9cd91e74-36e2-400f-aaa2-ae3cdf0b0f82',
     alt: 'festaSol',
     description: AniPackInfo.aniDescription,
@@ -34,14 +34,14 @@ export const BCinfo: {
     details: PalPackInfo.palDetails
   },
   {
-    title: 'Ensaio externos',
+    title: 'Ensaio externo',
     url: 'https://firebasestorage.googleapis.com/v0/b/portfoto-ac408.appspot.com/o/best%2Fcatalogo1.jpg?alt=media&token=5f92bd12-1647-4b4d-a06a-a7b850ba315b',
     alt: 'show1',
     description: ExtPackInfo.extDescription,
     details: ExtPackInfo.extDetails
   },
   {
-    title: 'Gestantes',
+    title: 'Ensaio Gestantes',
     url: 'https://firebasestorage.googleapis.com/v0/b/portfoto-ac408.appspot.com/o/best%2Fmag1.jpeg?alt=media&token=2428f6dc-ae03-4412-a617-3925a07af016',
     alt: 'show1',
     description: GesPackInfo.gesDescription,

@@ -2,6 +2,9 @@ import { EnvelopeSimple, EnvelopeSimpleOpen, PaperPlaneRight } from '@phosphor-i
 import { addDoc, collection } from 'firebase/firestore';
 import { dbFire, userAuth } from '../../../../../firebase';
 import { useState } from 'react';
+import { ChooseLoginMethodModal } from '../../../../components/modals/chooseLoginMethodModal/ChooseLoginMethodModal';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../store/stores';
 
 export const CommentBox = ({
   imageId,
@@ -9,12 +12,14 @@ export const CommentBox = ({
   closeCommentsBox,
   isOpen
 }: {
-  imageId: string;
+  imageId: string | void;
   isOpen?: boolean;
   openCommentsBox?: () => void;
   closeCommentsBox?: () => void;
 }) => {
   const [newCommentText, setNewCommentText] = useState('');
+  const [openLogin, setOpenLogin] = useState(false);
+  const isLogged = useSelector((state: RootState) => state.userStatus.isLogged);
 
   const handleSubmitComment = async () => {
     const commentsRef = collection(dbFire, 'comments');
@@ -35,15 +40,37 @@ export const CommentBox = ({
 
     setNewCommentText('');
   };
+  const onFocus = () => {
+    if (isLogged) {
+      console.log('parabrens');
+    } else {
+      setOpenLogin(true);
+    }
+  };
 
   return (
     <div className='w-7/12 items-center flex border hover:border-zinc-500  border-zinc-400 rounded-md border-t-0 border-l-0 '>
+      <ChooseLoginMethodModal
+        message='Para ter acesso aos comentários você precisa estar logado!'
+        closeLogin={() => setOpenLogin(false)}
+        openLogin={openLogin}
+      />
       {isOpen ? (
-        <EnvelopeSimple
-          onClick={openCommentsBox}
-          size={30}
-          className='text-zinc-400 hover:text-zinc-500'
-        />
+        <>
+          {isLogged ? (
+            <EnvelopeSimple
+              onClick={openCommentsBox}
+              size={30}
+              className='text-zinc-400 hover:text-zinc-500'
+            />
+          ) : (
+            <EnvelopeSimple
+              onClick={() => setOpenLogin(true)}
+              size={30}
+              className='text-zinc-400 hover:text-zinc-500'
+            />
+          )}
+        </>
       ) : (
         <EnvelopeSimpleOpen
           onClick={closeCommentsBox}
@@ -53,6 +80,7 @@ export const CommentBox = ({
       )}
       <input
         onChange={(e) => setNewCommentText(e.target.value)}
+        onFocus={onFocus}
         value={newCommentText}
         className='w-full p-2 outline-none '
         placeholder='Adicione seu comentário.'

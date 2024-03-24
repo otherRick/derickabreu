@@ -61,7 +61,7 @@ export const Input = ({
           readOnly={readOnly}
           className={`${
             !readOnly ? 'border border-gray-500 rounded-md ' : 'text-start'
-          } bg-transparent outline-none w-full pl-2 p-1`}
+          } bg-transparent outline-none w-full pl-2 p-2 text-xl`}
           value={value ?? ''}
           type={type}
         />

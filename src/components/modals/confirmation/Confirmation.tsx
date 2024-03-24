@@ -49,13 +49,13 @@ export const Confirmation = ({
             <div className='flex gap-6  '>
               <button
                 onClick={onConfirm}
-                className='bg-green-700 hover:bg-green-600 text-white py-1 px-2 rounded-md transition duration-300'
+                className='bg-green-700 hover:bg-green-600 text-white py-3 p-6 rounded-md transition duration-300'
               >
                 {confirmBtnText ? confirmBtnText : 'Confirmar'}
               </button>
               <button
                 onClick={onCancel}
-                className='underline hover:bg-gray-400 text-gray-800 py-1 px-2 rounded-md transition duration-300'
+                className='underline hover:bg-gray-400 text-gray-800 py-3 p-6 rounded-md transition duration-300'
               >
                 {closeBtnText ? closeBtnText : 'Cancelar'}
               </button>
@@ -69,7 +69,7 @@ export const Confirmation = ({
                 onClick={onConfirm}
                 className={`${
                   greenConfirm ? 'bg-green-700' : 'bg-red-500'
-                } hover:bg-red-600 text-white py-1 px-2 rounded-md transition duration-300 ${
+                } hover:bg-red-600 text-white py-3 p-6 rounded-md transition duration-300 ${
                   !onConfirm && 'hidden'
                 }`}
               >
@@ -77,7 +77,7 @@ export const Confirmation = ({
               </button>
               <button
                 onClick={onCancel}
-                className={`underline hover:bg-gray-400 text-gray-800 py-1 px-2 rounded-md transition duration-300 ${
+                className={`underline hover:bg-gray-400 text-gray-800 py-3 p-6 rounded-md transition duration-300 ${
                   !onCancel && 'hidden'
                 }`}
               >

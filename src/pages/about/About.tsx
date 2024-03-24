@@ -83,7 +83,7 @@ export const About = () => {
                   className='text-xs underline font-bold'
                   href='https://www.instagram.com/derick.abreu?igsh=dzQxbWJua2Y0c2Rp&utm_source=q'
                 >
-                  ISTAGRAM
+                  INSTAGRAM
                 </a>
                 <a
                   target='_blank'

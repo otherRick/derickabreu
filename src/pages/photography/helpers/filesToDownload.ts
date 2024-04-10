@@ -46,7 +46,7 @@ export const filesToDownload = [
   'esp1.jpg',
   'lora7.jpg',
   'judo1.jpeg',
-  'mag1.jpeg',
+  // 'mag1.jpeg',
   // sessão em pé
   // 'esp20.jpg',
   'esp17.jpg',

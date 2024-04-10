@@ -1,10 +1,8 @@
 import { ReactNode, useEffect, useRef, useState } from 'react';
-import { downloadMedia } from '../../api/repository/downloadmedia';
 import { Eye, Heart, X } from '@phosphor-icons/react';
 import { Footer } from '../../components/footer/Footer';
 import ReactGA from 'react-ga';
 import { userAuth } from '../../../firebase';
-import { filesToDownload } from './helpers/filesToDownload';
 import { getDatabase, ref, set, onValue, get } from 'firebase/database';
 import { CommentBox } from './components/commentBox/CommentBox';
 import { CommentsBoard } from '../../components/commentsBoard/CommentsBoard';

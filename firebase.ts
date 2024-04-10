@@ -17,6 +17,8 @@ const firebaseConfig = {
 export const appFire = initializeApp(firebaseConfig);
 const analytics = getAnalytics(appFire);
 
+console.log('get', getAuth());
+
 logEvent(analytics, 'notification_received');
 
 export const userAuth = getAuth(appFire);

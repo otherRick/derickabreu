@@ -86,9 +86,9 @@ export default function Layout() {
           <Link to='/about' className='hover:text-gray-300'>
             <p className={location.pathname === '/about' ? 'text-gray-400' : ''}>SOBRE</p>
           </Link>
-          <Link to='/contract' className='hover:text-gray-300'>
+          {/* <Link to='/contract' className='hover:text-gray-300'>
             <p className={location.pathname === '/contract' ? 'text-gray-400' : ''}>CONTRATAR</p>
-          </Link>
+          </Link> */}
           <Link to='/profile' className='hover:text-gray-300 text-yellow-700'>
             <p className={location.pathname === '/profile' ? 'text-gray-400' : ''}>
               {user ? user : 'CLIENTE'}

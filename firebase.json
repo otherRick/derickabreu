@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "portfoto-ac408",
+    "site": "derickabreu",
     "public": "dist",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [

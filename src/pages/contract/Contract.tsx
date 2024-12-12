@@ -1,7 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import { Footer } from '../../components/footer/Footer';
 import { BugetCard } from '../../components/buget/BugetCard';
 import { useEffect, useState } from 'react';
 import { WaForm } from '../../components/modals/WaForm/Waform';
@@ -80,9 +79,6 @@ export const Contract = () => {
             })}
           </div>
         </div>
-      </div>
-      <div className='w-full'>
-        <Footer black />
       </div>
     </section>
   );

@@ -4,6 +4,7 @@ import { userAuth } from '../../../firebase';
 import { createProfile } from '../../pages/login/slices/loginSlices';
 import { useDispatch } from 'react-redux';
 import { child, get, getDatabase, ref } from 'firebase/database';
+import { Footer } from '../footer/Footer';
 
 export default function Layout() {
   const [userName, setUserName] = useState<string | null>();
@@ -98,6 +99,7 @@ export default function Layout() {
       </div>
 
       <Outlet />
+      <Footer black={location.pathname === '/profile' ? false : true} />
     </div>
   );
 }

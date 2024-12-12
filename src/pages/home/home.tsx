@@ -3,7 +3,6 @@
 
 import { useEffect, useState } from 'react';
 import { homeMedia } from '../../api/repository/downloadmedia';
-import { Footer } from '../../components/footer/Footer';
 
 export const Home = () => {
   const [imageUrl, setImageUrl] = useState<string[] | null>(null);
@@ -36,7 +35,6 @@ export const Home = () => {
             </a>
           </p>
         </div>
-        <Footer black />
       </div>
     </div>
   );

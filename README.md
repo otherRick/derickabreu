@@ -57,6 +57,8 @@ const config: Config = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
 }
+
+export default config
 ```
 
 isso é o basico para conseguir rodar o jest usando typescript com syntax moderna como import e tal. Mas o react ainda n vai funcionar.

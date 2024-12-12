@@ -1,10 +1,11 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Home from '../pages/home/home';
 import Layout from '../components/layout/layout';
-import { Photography } from '../pages/photography/Photography';
+// import { Photography } from '../pages/photography/Photography';
 import { About } from '../pages/about/About';
 import { Contract } from '../pages/contract/Contract';
 import { ProfileUser } from '../pages/profile/profileUser';
+import { PhotographyNew } from '../pages/photography/PhotographyNew';
 
 export const router = createBrowserRouter([
   {
@@ -17,7 +18,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/photography',
-        element: <Photography />
+        element: <PhotographyNew />
       },
       {
         path: '/about',

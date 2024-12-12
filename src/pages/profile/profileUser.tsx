@@ -320,7 +320,6 @@ export const ProfileUser = () => {
           <Unloged onEnter={() => setOpenLogin(true)} />
         )}
       </section>
-      <Footer />
     </>
   );
 };

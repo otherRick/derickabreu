@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { scrollingState } from '../../components/layout/slices/layoutSlices';
 import { RootState } from '../../store/stores';
+import { Link } from 'react-router-dom';
 
 export const Photography = () => {
   const [imageUrls, setImageUrls] = useState<string[] | null>(null);
@@ -187,6 +188,13 @@ export const Photography = () => {
       });
   };
 
+  // const sessions = [
+  //   {
+  //     name: 'TODAS',
+  //     to: '/home'
+  //   }
+  // ];
+
   return (
     <div className='relative'>
       <CommentsBoard
@@ -199,6 +207,15 @@ export const Photography = () => {
         isOpen={!toggleCommentBoard}
       />
       <LoginSMS open={openLogin} closeLogin={() => setOpenLogin(false)} />
+      {/* <div className='bg-red-300 p-10 justify-evenly md:flex '>
+        {sessions.map(({ to, name }) => {
+          return (
+            <Link to={to} className='hover:text-gray-300'>
+              <p className={location.pathname === '/home' ? 'text-gray-400' : ''}>{name}</p>
+            </Link>
+          );
+        })}
+      </div> */}
       <div>
         {imageUrls ? (
           <div className='image-grid'>

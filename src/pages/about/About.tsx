@@ -1,5 +1,3 @@
-import { Footer } from '../../components/footer/Footer';
-
 export const About = () => {
   return (
     <>
@@ -106,7 +104,6 @@ export const About = () => {
           </div>
         </div>
       </section>
-      <Footer black />
     </>
   );
 };

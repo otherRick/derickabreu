@@ -94,23 +94,23 @@ export const Portifolio = () => {
       album: 'CELEBRAÇÕES',
       src: 'https://firebasestorage.googleapis.com/v0/b/portfoto-ac408.appspot.com/o/best%2Fesp3.jpg?alt=media&token=764e28ff-0ee3-43fb-9ae4-a4108cd9aa89'
     },
-    {
-      photoTitle: [
-        'mag2.jpeg',
-        'ensaio10.jpg',
-        'mag3.jpeg',
-        'mag1.jpeg',
-        'newborn1.jpg',
-        'newborn2.jpg',
-        'newborn3.jpg',
-        'newborn4.jpg',
-        'prof1.jpeg',
-        'prof2.jpeg'
-      ],
-      alt: 'home',
-      album: 'GESTANTES',
-      src: 'https://firebasestorage.googleapis.com/v0/b/portfoto-ac408.appspot.com/o/best%2Fmag2.jpeg?alt=media&token=31b65b4c-ea16-4411-a3e7-46410df162aa'
-    },
+    // {
+    //   photoTitle: [
+    //     'mag2.jpeg',
+    //     'ensaio10.jpg',
+    //     'mag3.jpeg',
+    //     'mag1.jpeg',
+    //     'newborn1.jpg',
+    //     'newborn2.jpg',
+    //     'newborn3.jpg',
+    //     'newborn4.jpg',
+    //     'prof1.jpeg',
+    //     'prof2.jpeg'
+    //   ],
+    //   alt: 'home',
+    //   album: 'GESTANTES',
+    //   src: 'https://firebasestorage.googleapis.com/v0/b/portfoto-ac408.appspot.com/o/best%2Fmag2.jpeg?alt=media&token=31b65b4c-ea16-4411-a3e7-46410df162aa'
+    // },
     {
       photoTitle: [
         'clareou2.jpg',

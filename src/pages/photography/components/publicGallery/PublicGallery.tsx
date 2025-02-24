@@ -28,7 +28,7 @@ export const PublicGallery = () => {
   const [viewCounter, setViewCounter] = useState<ReactNode>('');
   const location = useLocation();
 
-  const { album } = location.state || {};
+  const { album, keyPass } = location.state || {};
 
   // Cleaning image name
   const decoded = decodeURIComponent(imageId);
@@ -92,12 +92,10 @@ export const PublicGallery = () => {
     });
   });
 
-  console.log(album);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const urls = await downloadAllPublicAlbuns(album);
+        const urls = await downloadAllPublicAlbuns(keyPass);
         setImageUrls(urls);
       } catch (error) {
         console.error('Error fetching media:', error);
@@ -261,24 +259,6 @@ export const PublicGallery = () => {
         } fixed top-0 left-0 h-screen w-screen bg-black z-100 items-center justify-center flex`}
       >
         <div
-          onClick={() => {
-            setSelectedImage(false);
-            handleClick();
-          }}
-          style={{ backgroundColor: 'rgba(1,1,1,0.5)' }}
-          className='flex items-center p-1 gap-2 text-white opacity-70 fixed top-16 md:right-16 right-4 rounded-xl'
-        >
-          {/* <p className='text-white font-bold'>FECHAR</p> */}
-          <X className='' color='white' size={32} />
-        </div>
-        <div
-          onClick={() => downloadImage()}
-          style={{ backgroundColor: 'rgba(1,1,1,0.5)' }}
-          className='flex items-center p-1 rounded-xl  gap-2 text-white opacity-70 fixed top-16 md:left-16 left-4'
-        >
-          <ArrowDownTrayIcon className='w-8 text-zinc-400 text-bold hover:text-zinc-800' />
-        </div>
-        <div
           ref={modalRef}
           className={`bg-white md:w-2/3 p-2 h-fit items-center justify-center flex flex-col ${
             !landscape ? ' max-w-[1200px]' : ' max-w-[550px]'
@@ -286,11 +266,30 @@ export const PublicGallery = () => {
         >
           <img src={fullImage?.toString()} alt={`Downloaded Media ${'fullImage'}`} />
           <div className=' w-full  flex items-center justify-between p-6'>
-            <div className='flex text-xs items-center w-2/12 gap-2'>
+            {/* <div className='flex text-xs items-center w-2/12 gap-2'>
               <Eye size={20} />
               {viewCounter} {''}
+            </div> */}
+
+            <div
+              onClick={() => downloadImage()}
+              style={{ backgroundColor: 'rgba(1,1,1,0.5)' }}
+              className='flex items-center p-1 rounded-xl  gap-2 text-white opacity-70 top-16 md:left-16 left-4'
+            >
+              <ArrowDownTrayIcon className='w-8  hover:text-zinc-800' />
             </div>
-            <CommentBox
+            <div
+              onClick={() => {
+                setSelectedImage(false);
+                handleClick();
+              }}
+              style={{ backgroundColor: 'rgba(1,1,1,0.5)' }}
+              className='flex items-center p-1 gap-2 text-white opacity-70 top-16 md:right-16 right-4 rounded-xl'
+            >
+              {/* <p className='text-white font-bold'>FECHAR</p> */}
+              <X className=' hover:text-zinc-800' size={32} />
+            </div>
+            {/* <CommentBox
               isOpen={!toggleCommentBoard}
               imageId={imageId}
               openCommentsBox={() => setToggleCommentBoard(true)}
@@ -304,7 +303,7 @@ export const PublicGallery = () => {
                 className='text-red-500 hover:text-red-400'
                 weight={`${like ? 'fill' : 'light'}`}
               />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

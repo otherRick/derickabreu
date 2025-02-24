@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PublicGallery } from '../publicGallery/PublicGallery';
-import { FolderArrowDownIcon } from '@heroicons/react/24/outline';
+// import { FolderArrowDownIcon } from '@heroicons/react/24/outline';
 import JSZip from 'jszip';
 import { downloadAllPublicAlbuns } from '../../../../api/repository/downloadmedia';
 import { useEffect, useState } from 'react';
@@ -15,7 +15,7 @@ export const PublicBlank = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const urls = await downloadAllPublicAlbuns();
+        const urls = await downloadAllPublicAlbuns('');
         setImageUrls(urls);
       } catch (error) {
         console.error('Erro ao buscar imagens:', error);
@@ -25,7 +25,7 @@ export const PublicBlank = () => {
     fetchData();
   }, []);
 
-  const downloadImagesAsZip = async (imageUrls) => {
+  const downloadImagesAsZip = async (imageUrls: []) => {
     try {
       const zip = new JSZip();
 
@@ -68,8 +68,8 @@ export const PublicBlank = () => {
           onClick={() => downloadImagesAsZip(imageUrls)}
           className='items-center flex w-1/3 justify-center flex-col cursor-pointer'
         >
-          <FolderArrowDownIcon className='w-8 text-zinc-400 hover:text-zinc-800' />
-          <p>baixar pasta</p>
+          {/* <FolderArrowDownIcon className='w-8 text-zinc-400 hover:text-zinc-800' />
+          <p>baixar pasta</p> */}
         </div>
       </div>
       <PublicGallery sessions={photoTitle} />

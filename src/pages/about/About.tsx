@@ -13,6 +13,40 @@ export const About = () => {
           <div className='max-w-[500px] space-y-6'>
             <div className='space-y-6'>
               <p className='md:text-5xl text-3xl'>Derick Abreu </p>
+              <p>Fui criado pela fotografia.</p>
+              Desde pequeno, brincava com rolos de filme e era envolvido pelo cheiro característico
+              do tiossulfato de amônio nos laboratórios fotográficos. Pouco antes de eu nascer, meu
+              pai deixou um cargo público para se dedicar exclusivamente à fotografia.
+              <p>
+                Apesar dessa convivência desde cedo, levei 14 anos para fazer meus primeiros
+                registros. Logo, já estava ao lado do meu pai como fotógrafo principal em eventos
+                importantes.
+              </p>
+              <p>
+                Aos 21 anos, após um período cobrindo eventos esportivos, descobri minha maior
+                habilidade e reconhecimento ao registrar apresentações artísticas de palco, como
+                shows, espetáculos de dança e peças de teatro. Nesse período, tive a oportunidade
+                de fotografar artistas nacionais e internacionais.
+              </p>
+              <p>
+                Também estive presente em grandes eventos nacionais, como o Carnaval de Salvador em
+                2016 e o desfile das escolas de samba na Sapucaí, Rio de Janeiro, em 2018.
+                Paralelamente, trabalhei para as duas maiores agências do Rio de Janeiro,
+                realizando pautas para publicações em revistas e sites de celebridades entre 2014 e
+                2020.
+              </p>
+              <p>
+                Além dos registros em eventos, meu repertório inclui trabalhos em estúdio, com luz
+                e ambiente controlados, voltados para ensaios de moda e materiais de divulgação.
+              </p>
+              <p>
+                A fotografia se tornou minha forma natural de expressão. Com uma inclinação ao
+                estilo fotojornalístico, sigo praticando essa arte não apenas como uma profissão,
+                mas como uma maneira de viver e aproveitar a vida.
+              </p>
+            </div>
+            {/* <div className='space-y-6'>
+              <p className='md:text-5xl text-3xl'>Derick Abreu </p>
               <p>
                 Nasceu no final dos anos 80, durante a era da fotografia analógica, no Rio de
                 Janeiro. Filho de um fotógrafo, cresceu imerso no mundo da fotografia e iniciou sua
@@ -71,8 +105,8 @@ export const About = () => {
                 emoções e momentos únicos. Derick está em evolução contínua em sua jornada na
                 fotografia, sempre buscando novos desafios e explorando diferentes estilos.
               </p>
-            </div>
-            <div className='pb-10'>
+            </div> */}
+            {/* <div className='pb-10'>
               <p>SIGA</p>
               <div className='space-x-4'>
                 <a
@@ -100,7 +134,7 @@ export const About = () => {
                   YOUTUBE
                 </a>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>

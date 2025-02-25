@@ -20,15 +20,15 @@ export const PublicAlbuns = () => {
     {
       alt: 'dh8',
       album: 'Dia de treino DH8',
-      keyPass: 'dh8praia',
-      src: 'https://firebasestorage.googleapis.com/v0/b/portfoto-ac408.appspot.com/o/dh8praia%2Fdh8bests%2FIMG_5277.jpg?alt=media&token=a69010aa-2c13-4745-8177-85cd80161df6'
+      keyPass: 'Dh8praia',
+      src: 'https://firebasestorage.googleapis.com/v0/b/portfoto-ac408.appspot.com/o/Dh8praia%2Fdh8-116.jpg?alt=media&token=eba6f2e0-3850-4fc3-b94e-7dd9c62d3551'
     }
   ];
 
   return (
     <div className='py-20'>
       <div className='pb-10 items-center flex justify-center w-full'>
-        <p>EVENTOS</p>
+        <p>EVENTOS PÚBLICOS</p>
       </div>
 
       <div className='space-y-7 md:space-y-0 gap-10 md:grid-cols-4 md:grid'>

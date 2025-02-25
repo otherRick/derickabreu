@@ -54,7 +54,7 @@ export const PublicBlank = () => {
   };
 
   return (
-    <div>
+    <div className='w-full'>
       <div className='bg-zinc-100 py-10 flex justify-center'>
         <div className='items-center flex w-1/3 justify-center'>
           <button className='underline' onClick={() => navigate(-1)}>

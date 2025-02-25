@@ -25,6 +25,7 @@ export const SessionCard = ({ onClick, src, alt, title, keyPass, nav }) => {
           onChange={(e) => setValueKey(e.target.value)}
           placeholder={validKey ? '' : 'chave inválida'}
           onFocus={() => setValidKey(true)}
+          onBlur={() => SetSwitchKey(false)}
           type='text'
         />
         <button

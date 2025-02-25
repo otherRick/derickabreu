@@ -231,21 +231,30 @@ export const PublicGallery = () => {
         {imageUrls ? (
           <div className='image-grid'>
             {imageUrls.map((url, index) => (
-              <img
-                onClick={() => {
-                  photoOrientation(url);
-                  setFullImage(url);
-                  setSelectedImage(true);
-                  getImgId(url);
-                  clickCounter();
-                  handleClick();
-                  ga();
-                }}
-                key={index}
-                src={url}
-                alt={`Downloaded Media ${index}`}
-                width={'100%'}
-              />
+              <div className='bg-red-300 w-fit relative h-fit'>
+                <div className='absolute w-full items-center text-zinc-400 opacity-80 z-50 justify-evenly flex flex-col h-full font-bold text-xl'>
+                  <p>foto: @derick.abreu</p>
+                  <p>foto: @derick.abreu</p>
+                  <p>foto: @derick.abreu</p>
+                  <p>foto: @derick.abreu</p>
+                  <p>foto: @derick.abreu</p>
+                </div>
+                <img
+                  onClick={() => {
+                    photoOrientation(url);
+                    setFullImage(url);
+                    setSelectedImage(true);
+                    getImgId(url);
+                    clickCounter();
+                    handleClick();
+                    ga();
+                  }}
+                  key={index}
+                  src={url}
+                  alt={`Downloaded Media ${index}`}
+                  width={'100%'}
+                />
+              </div>
             ))}
           </div>
         ) : (

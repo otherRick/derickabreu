@@ -171,13 +171,13 @@ export const Portifolio = () => {
         'off7.jpg',
         'ugo1.jpg',
         'ugo2.jpg',
-        'voice2.jpeg',
-        'pri2.jpeg',
-        'pri1.jpeg'
+        'voice2.jpeg'
+        // 'pri2.jpeg',
+        // 'pri1.jpeg'
       ],
       alt: 'home',
       album: 'ESTÚDIO',
-      src: 'https://firebasestorage.googleapis.com/v0/b/portfoto-ac408.appspot.com/o/best%2Fpri2.jpeg?alt=media&token=da48cd9b-fb9b-4dab-afe3-c3aff60e3e21'
+      src: 'https://firebasestorage.googleapis.com/v0/b/portfoto-ac408.appspot.com/o/best%2Feyes1.jpeg?alt=media&token=4b4ae7c2-02e6-4a39-9709-578eb889eb15'
     },
     {
       photoTitle: ['fani1.jpeg', 'quem1.jpeg'],

@@ -4,13 +4,20 @@ import { PublicGallery } from '../publicGallery/PublicGallery';
 import JSZip from 'jszip';
 import { downloadAllPublicAlbuns } from '../../../../api/repository/downloadmedia';
 import { useEffect, useState } from 'react';
+import { photosession } from '../../helpers/photosession';
 
-export const PublicBlank = () => {
+export const PrivateAlbumBlank = () => {
+  const [imageUrls, setImageUrls] = useState<[string]>(['']);
+  const navigate = useNavigate();
   const location = useLocation();
 
-  const [imageUrls, setImageUrls] = useState<string[] | null>([]);
-  const { photoTitle, album } = location.state || {};
-  const navigate = useNavigate();
+  const { album } = location.state || {};
+
+  const urlLength = location.pathname.split('/').length;
+  const decodedAlbumName = decodeURIComponent(location.pathname.split('/')[urlLength - 1]);
+  const foundAlbum = photosession.find((item) => item.album === decodedAlbumName);
+
+  console.log('asd', foundAlbum);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,7 +32,7 @@ export const PublicBlank = () => {
     fetchData();
   }, []);
 
-  const downloadImagesAsZip = async (imageUrls: []) => {
+  const downloadImagesAsZip = async (imageUrls) => {
     try {
       const zip = new JSZip();
 
@@ -62,7 +69,7 @@ export const PublicBlank = () => {
           </button>
         </div>
         <div className='items-center flex w-1/3 justify-center'>
-          <p>{album}</p>
+          <p>{album ? album : foundAlbum?.album}</p>
         </div>
         <div
           onClick={() => downloadImagesAsZip(imageUrls)}
@@ -72,7 +79,7 @@ export const PublicBlank = () => {
           <p>baixar pasta</p> */}
         </div>
       </div>
-      <PublicGallery sessions={photoTitle} />
+      <PublicGallery />
     </div>
   );
 };

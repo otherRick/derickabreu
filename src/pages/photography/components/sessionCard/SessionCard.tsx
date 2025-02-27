@@ -1,11 +1,18 @@
 import { useState } from 'react';
 
-export const SessionCard = ({ onClick, src, alt, title, keyPass, nav }) => {
+interface SessionCardProp {
+  onClick: (event: React.MouseEvent<HTMLImageElement, MouseEvent>) => void;
+  src: string;
+  alt: string;
+  title: string;
+  keyPass: boolean | string;
+  nav?: () => void;
+}
+
+export const SessionCard = ({ onClick, src, alt, title, keyPass, nav }: SessionCardProp) => {
   const [switchKey, SetSwitchKey] = useState(false);
   const [valueKey, setValueKey] = useState('');
   const [validKey, setValidKey] = useState(true);
-
-  console.log(valueKey);
 
   return (
     <div className={`relative`}>
@@ -25,7 +32,6 @@ export const SessionCard = ({ onClick, src, alt, title, keyPass, nav }) => {
           onChange={(e) => setValueKey(e.target.value)}
           placeholder={validKey ? '' : 'chave inválida'}
           onFocus={() => setValidKey(true)}
-          onBlur={() => SetSwitchKey(false)}
           type='text'
         />
         <button
@@ -53,11 +59,11 @@ export const SessionCard = ({ onClick, src, alt, title, keyPass, nav }) => {
         src={src}
         alt={alt}
         className='md:max-w-96 w-80 '
-        onClick={() => {
+        onClick={(e) => {
           if (keyPass) {
             SetSwitchKey(!switchKey);
           } else {
-            onClick();
+            onClick(e);
           }
         }}
       />

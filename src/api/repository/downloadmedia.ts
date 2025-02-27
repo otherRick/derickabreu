@@ -1,5 +1,6 @@
 import { getDownloadURL, getStorage, listAll, ref } from 'firebase/storage';
 import { bucket } from '../database';
+import { SetStateAction } from 'react';
 
 export const downloadMedia = async (files: string[] | string) => {
   try {
@@ -19,7 +20,7 @@ export const downloadMedia = async (files: string[] | string) => {
   }
 };
 
-export const downloadAllPublicAlbuns = async (album: string) => {
+export const downloadAllPublicAlbuns = async (album: string | SetStateAction<string[]>) => {
   try {
     const storage = getStorage();
     const directoryRef = ref(storage, `/${album}`); // Referência à pasta "best"

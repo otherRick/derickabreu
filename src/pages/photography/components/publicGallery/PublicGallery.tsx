@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useRef, useState } from 'react';
+import { Button, Modal } from 'flowbite-react';
 
-import { Eye, Heart, X } from '@phosphor-icons/react';
+import { Eye, Heart, ShoppingBag, ShoppingCartSimple, X } from '@phosphor-icons/react';
 import ReactGA from 'react-ga';
 import { userAuth } from '../../../../../firebase';
 import { LoginSMS } from '../../../login/loginSMS';
@@ -13,7 +14,8 @@ import { scrollingState } from '../../../../components/layout/slices/layoutSlice
 import { RootState } from '../../store/stores';
 import { downloadAllPublicAlbuns } from '../../../../api/repository/downloadmedia';
 import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { photosession } from '../../helpers/photosession';
 
 export const PublicGallery = () => {
   const [imageUrls, setImageUrls] = useState<string[] | null>(null);
@@ -26,9 +28,48 @@ export const PublicGallery = () => {
   const [imageId, setImageId] = useState('');
   const [toggleCommentBoard, setToggleCommentBoard] = useState(false);
   const [viewCounter, setViewCounter] = useState<ReactNode>('');
-  const location = useLocation();
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [albumKey, setAlbumKey] = useState('');
 
-  const { album, keyPass } = location.state || {};
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const { keyPass } = location.state || {};
+
+  const urlLength = location.pathname.split('/').length;
+  const decodedAlbumName = decodeURIComponent(location.pathname.split('/')[urlLength - 1]);
+  const foundAlbum = photosession.find((item) => item.album === decodedAlbumName);
+
+  useEffect(() => {
+    if (keyPass) {
+      console.log('ok');
+      const fetchData = async () => {
+        try {
+          const urls = await downloadAllPublicAlbuns(keyPass);
+          setImageUrls(urls);
+        } catch (error) {
+          console.error('Error fetching media:', error);
+        }
+      };
+
+      fetchData();
+    } else {
+      console.log('oh no!');
+      setOpenModal(true);
+    }
+  }, []);
+
+  const handleEnterKey = async () => {
+    try {
+      const urls = await downloadAllPublicAlbuns(albumKey);
+      setImageUrls(urls);
+      if (albumKey === foundAlbum.keyPass) {
+        setOpenModal(false);
+      }
+    } catch (error) {
+      console.error('Error fetching media:', error);
+    }
+  };
 
   // Cleaning image name
   const decoded = decodeURIComponent(imageId);
@@ -91,19 +132,6 @@ export const PublicGallery = () => {
       setViewCounter(total as number);
     });
   });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const urls = await downloadAllPublicAlbuns(keyPass);
-        setImageUrls(urls);
-      } catch (error) {
-        console.error('Error fetching media:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const ga = () => {
     ReactGA.event({
@@ -208,10 +236,25 @@ export const PublicGallery = () => {
       link.click();
       document.body.removeChild(link);
 
-      URL.revokeObjectURL(link.href); // Clean up
+      URL.revokeObjectURL(link.href);
     } catch (error) {
       console.error('Download failed:', error);
     }
+  };
+
+  const handleSendWhatsapp = () => {
+    const numeroTelefone = '5521973621887';
+    const extractFileName = () => {
+      const urlObj = new URL(fullImage);
+      const pathname = urlObj.pathname;
+      const fileName = pathname.split('/').pop();
+      return fileName || '';
+    };
+
+    const mensagem = `Gostaria de comprar esta imagem:%0A${extractFileName()}`;
+    const link = `https://api.whatsapp.com/send?phone=${numeroTelefone}&text=${mensagem}`;
+
+    window.open(link, '_blank');
   };
 
   return (
@@ -226,19 +269,42 @@ export const PublicGallery = () => {
         isOpen={!toggleCommentBoard}
       />
       <LoginSMS open={openLogin} closeLogin={() => setOpenLogin(false)} />
+      <Modal
+        onClose={() => {
+          setOpenModal(false), navigate('/photography');
+        }}
+        show={openModal}
+      >
+        <Modal.Header>{foundAlbum.album}</Modal.Header>
+        <Modal.Body>
+          <div className='flex flex-col'>
+            <p>Enter Key</p>
+            <input value={albumKey} onChange={(e) => setAlbumKey(e.target.value)} type='text' />
+            <Button onClick={handleEnterKey}>Entrar</Button>
+            <a className='underline' href='/photography'>
+              fechar
+            </a>
+          </div>
+        </Modal.Body>
+      </Modal>
 
       <div>
         {imageUrls ? (
           <div className='image-grid'>
             {imageUrls.map((url, index) => (
-              <div className='bg-red-300 w-fit relative h-fit'>
-                <div className='absolute w-full items-center text-zinc-400 opacity-80 z-50 justify-evenly flex flex-col h-full font-bold text-xl'>
-                  <p>foto: @derick.abreu</p>
-                  <p>foto: @derick.abreu</p>
-                  <p>foto: @derick.abreu</p>
-                  <p>foto: @derick.abreu</p>
-                  <p>foto: @derick.abreu</p>
-                </div>
+              <div
+                key={index}
+                onClick={() => {
+                  photoOrientation(url);
+                  setFullImage(url);
+                  setSelectedImage(true);
+                  getImgId(url);
+                  clickCounter();
+                  handleClick();
+                  ga();
+                }}
+                className='w-fit relative h-fit'
+              >
                 <img
                   onClick={() => {
                     photoOrientation(url);
@@ -249,7 +315,6 @@ export const PublicGallery = () => {
                     handleClick();
                     ga();
                   }}
-                  key={index}
                   src={url}
                   alt={`Downloaded Media ${index}`}
                   width={'100%'}
@@ -265,7 +330,7 @@ export const PublicGallery = () => {
         style={{ backgroundColor: ' rgba(0, 0, 0, 0.7)' }}
         className={`${
           selectedImage ? '' : 'hidden'
-        } fixed top-0 left-0 h-screen w-screen bg-black z-100 items-center justify-center flex`}
+        } fixed -top-10 left-0 h-screen w-screen bg-black z-100 items-center justify-center flex`}
       >
         <div
           ref={modalRef}
@@ -274,19 +339,32 @@ export const PublicGallery = () => {
           }`}
         >
           <img src={fullImage?.toString()} alt={`Downloaded Media ${'fullImage'}`} />
-          <div className=' w-full  flex items-center justify-between p-6'>
+          <div className='z-50 w-full  flex items-center justify-between p-6'>
             {/* <div className='flex text-xs items-center w-2/12 gap-2'>
               <Eye size={20} />
               {viewCounter} {''}
             </div> */}
 
             <div
-              onClick={() => downloadImage()}
+              onClick={handleSendWhatsapp}
               style={{ backgroundColor: 'rgba(1,1,1,0.5)' }}
-              className='flex items-center p-1 rounded-xl  gap-2 text-white opacity-70 top-16 md:left-16 left-4'
+              className={` ${
+                !foundAlbum.payToview && 'hidden'
+              } flex items-center p-2 rounded-xl  gap-2 text-white opacity-70 top-16 md:left-16 left-4 hover:text-blue-400 cursor-pointer`}
+            >
+              <ShoppingCartSimple className='' />
+              <p>Comprar</p>
+            </div>
+            <div
+              onClick={downloadImage}
+              style={{ backgroundColor: 'rgba(1,1,1,0.5)' }}
+              className={` ${
+                foundAlbum.payToview && 'hidden'
+              } flex items-center p-2 rounded-xl  gap-2 text-white opacity-70 top-16 md:left-16 left-4 hover:text-blue-400 cursor-pointer`}
             >
               <ArrowDownTrayIcon className='w-8  hover:text-zinc-800' />
             </div>
+
             <div
               onClick={() => {
                 setSelectedImage(false);

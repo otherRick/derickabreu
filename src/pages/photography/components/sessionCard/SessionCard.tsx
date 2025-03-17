@@ -15,9 +15,18 @@ export const SessionCard = ({ onClick, src, alt, title, keyPass, nav }: SessionC
   const [validKey, setValidKey] = useState(true);
 
   return (
-    <div className={`relative`}>
+    <div
+      onClick={() => {
+        if (keyPass === '') {
+          nav();
+        }
+      }}
+      className={`relative`}
+    >
       <div className='relative'>
-        <p className='absolute text-white z-50 p-2 bg-white w-full bg-opacity-35'>{title}</p>
+        <p className='absolute text-white font-bold z-50 p-2 bg-black opacity-70 w-full '>
+          {title}
+        </p>
       </div>
       <div
         style={{ backgroundColor: 'rgba(1,1,1,0.7)' }}

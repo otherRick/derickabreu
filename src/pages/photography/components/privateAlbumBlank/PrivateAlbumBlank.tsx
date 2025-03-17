@@ -17,8 +17,6 @@ export const PrivateAlbumBlank = () => {
   const decodedAlbumName = decodeURIComponent(location.pathname.split('/')[urlLength - 1]);
   const foundAlbum = photosession.find((item) => item.album === decodedAlbumName);
 
-  console.log('asd', foundAlbum);
-
   useEffect(() => {
     const fetchData = async () => {
       try {

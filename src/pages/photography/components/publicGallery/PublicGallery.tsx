@@ -1,12 +1,11 @@
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { Button, Modal } from 'flowbite-react';
 
-import { Eye, Heart, ShoppingBag, ShoppingCartSimple, X } from '@phosphor-icons/react';
+import { CaretLeft, CaretRight, ShoppingCartSimple, X } from '@phosphor-icons/react';
 import ReactGA from 'react-ga';
 import { userAuth } from '../../../../../firebase';
 import { LoginSMS } from '../../../login/loginSMS';
 import { getDatabase, ref, set, onValue, get } from 'firebase/database';
-import { CommentBox } from '../commentBox/CommentBox';
 import { CommentsBoard } from '../../../../components/commentsBoard/CommentsBoard';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
@@ -18,7 +17,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { photosession } from '../../helpers/photosession';
 
 export const PublicGallery = () => {
-  const [imageUrls, setImageUrls] = useState<string[] | null>(null);
+  const [imageUrls, setImageUrls] = useState<string[] | null>(['']);
   const [fullImage, setFullImage] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState(false);
   const [like, setLike] = useState(false);
@@ -30,22 +29,45 @@ export const PublicGallery = () => {
   const [viewCounter, setViewCounter] = useState<ReactNode>('');
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [albumKey, setAlbumKey] = useState('');
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { keyPass } = location.state || {};
+  const { keyPass, alt } = location.state || {};
 
   const urlLength = location.pathname.split('/').length;
   const decodedAlbumName = decodeURIComponent(location.pathname.split('/')[urlLength - 1]);
   const foundAlbum = photosession.find((item) => item.album === decodedAlbumName);
 
+  const nextImage = () => {
+    setCurrentIndex((prev) => (prev + 1) % imageUrls.length);
+    photoOrientation(imageUrls[currentIndex + 1]);
+  };
+
+  const prevImage = () => {
+    setCurrentIndex((prev) => (prev - 1 + imageUrls.length) % imageUrls.length);
+    photoOrientation(imageUrls[currentIndex - 1]);
+  };
+
   useEffect(() => {
-    if (keyPass) {
-      console.log('ok');
+    if (keyPass || keyPass === '') {
       const fetchData = async () => {
         try {
-          const urls = await downloadAllPublicAlbuns(keyPass);
+          const urls = await downloadAllPublicAlbuns(keyPass === '' ? alt : keyPass);
+          setImageUrls(urls);
+        } catch (error) {
+          console.error('Error fetching media:', error);
+        }
+      };
+
+      fetchData();
+    } else if (!keyPass) {
+      const fetchData = async () => {
+        try {
+          const urls = await downloadAllPublicAlbuns(foundAlbum?.alt);
+          console.log(urls);
+
           setImageUrls(urls);
         } catch (error) {
           console.error('Error fetching media:', error);
@@ -54,7 +76,6 @@ export const PublicGallery = () => {
 
       fetchData();
     } else {
-      console.log('oh no!');
       setOpenModal(true);
     }
   }, []);
@@ -194,11 +215,9 @@ export const PublicGallery = () => {
       const altura = img.height;
 
       if (largura > altura) {
-        setLandscape(false);
-      } else if (largura < altura) {
         setLandscape(true);
       } else {
-        setLandscape(true);
+        setLandscape(false);
       }
     };
     img.src = url;
@@ -257,6 +276,8 @@ export const PublicGallery = () => {
     window.open(link, '_blank');
   };
 
+  console.log(landscape);
+
   return (
     <div className='relative'>
       <CommentsBoard
@@ -273,7 +294,7 @@ export const PublicGallery = () => {
         onClose={() => {
           setOpenModal(false), navigate('/photography');
         }}
-        show={openModal}
+        show={keyPass === '' ? false : openModal}
       >
         <Modal.Header>{foundAlbum.album}</Modal.Header>
         <Modal.Body>
@@ -290,7 +311,7 @@ export const PublicGallery = () => {
 
       <div>
         {imageUrls ? (
-          <div className='image-grid'>
+          <div className='columns-2 md:columns-6 gap-4 space-y-4 p-4 '>
             {imageUrls.map((url, index) => (
               <div
                 key={index}
@@ -301,6 +322,7 @@ export const PublicGallery = () => {
                   getImgId(url);
                   clickCounter();
                   handleClick();
+                  setCurrentIndex(index);
                   ga();
                 }}
                 className='w-fit relative h-fit'
@@ -316,6 +338,7 @@ export const PublicGallery = () => {
                     ga();
                   }}
                   src={url}
+                  className='w-full rounded-lg break-inside-avoid'
                   alt={`Downloaded Media ${index}`}
                   width={'100%'}
                 />
@@ -330,53 +353,62 @@ export const PublicGallery = () => {
         style={{ backgroundColor: ' rgba(0, 0, 0, 0.7)' }}
         className={`${
           selectedImage ? '' : 'hidden'
-        } fixed -top-10 left-0 h-screen w-screen bg-black z-100 items-center justify-center flex`}
+        } fixed top-0 left-0 h-screen w-screen bg-black z-100 items-center justify-evenly flex`}
       >
         <div
           ref={modalRef}
-          className={`bg-white md:w-2/3 p-2 h-fit items-center justify-center flex flex-col ${
-            !landscape ? ' max-w-[1200px]' : ' max-w-[550px]'
+          className={`bg-white md:w-2/3 p-2 h-fit items-center flex relative ${
+            landscape ? ' md:max-w-[1000px] w-96' : ' md:max-w-[500px] w-10/12'
           }`}
         >
-          <img src={fullImage?.toString()} alt={`Downloaded Media ${'fullImage'}`} />
-          <div className='z-50 w-full  flex items-center justify-between p-6'>
-            {/* <div className='flex text-xs items-center w-2/12 gap-2'>
+          <div
+            onClick={prevImage}
+            className='h-40 flex items-center absolute opacity-40 left-5 md:-left-40'
+          >
+            <div className='bg-black text-white rounded-full p-2 text-xl md:text-6xl font-bold'>
+              <CaretLeft />
+            </div>
+          </div>
+          <div>
+            <img src={imageUrls[currentIndex]} alt={`Downloaded Media ${'fullImage'}`} />
+            <div className='z-50 w-full  flex items-center justify-between p-2'>
+              {/* <div className='flex text-xs items-center w-2/12 gap-2'>
               <Eye size={20} />
               {viewCounter} {''}
-            </div> */}
+              </div> */}
 
-            <div
-              onClick={handleSendWhatsapp}
-              style={{ backgroundColor: 'rgba(1,1,1,0.5)' }}
-              className={` ${
-                !foundAlbum.payToview && 'hidden'
-              } flex items-center p-2 rounded-xl  gap-2 text-white opacity-70 top-16 md:left-16 left-4 hover:text-blue-400 cursor-pointer`}
-            >
-              <ShoppingCartSimple className='' />
-              <p>Comprar</p>
-            </div>
-            <div
-              onClick={downloadImage}
-              style={{ backgroundColor: 'rgba(1,1,1,0.5)' }}
-              className={` ${
-                foundAlbum.payToview && 'hidden'
-              } flex items-center p-2 rounded-xl  gap-2 text-white opacity-70 top-16 md:left-16 left-4 hover:text-blue-400 cursor-pointer`}
-            >
-              <ArrowDownTrayIcon className='w-8  hover:text-zinc-800' />
-            </div>
+              <div
+                onClick={handleSendWhatsapp}
+                style={{ backgroundColor: 'rgba(1,1,1,0.5)' }}
+                className={` ${
+                  !foundAlbum.payToview && 'hidden'
+                } flex items-center p-2 rounded-xl  gap-2 text-white opacity-70 top-16 md:left-16 left-4 hover:text-blue-400 cursor-pointer`}
+              >
+                <ShoppingCartSimple className='' />
+                <p>Comprar</p>
+              </div>
+              <div
+                onClick={downloadImage}
+                style={{ backgroundColor: 'rgba(1,1,1,0.5)' }}
+                className={` ${
+                  foundAlbum.payToview && 'hidden'
+                } flex items-center p-2 rounded-xl  gap-2 text-white opacity-70 top-16 md:left-16 left-4 hover:text-blue-400 cursor-pointer`}
+              >
+                <ArrowDownTrayIcon className='w-8  hover:text-zinc-800' />
+              </div>
 
-            <div
-              onClick={() => {
-                setSelectedImage(false);
-                handleClick();
-              }}
-              style={{ backgroundColor: 'rgba(1,1,1,0.5)' }}
-              className='flex items-center p-1 gap-2 text-white opacity-70 top-16 md:right-16 right-4 rounded-xl'
-            >
-              {/* <p className='text-white font-bold'>FECHAR</p> */}
-              <X className=' hover:text-zinc-800' size={32} />
-            </div>
-            {/* <CommentBox
+              <div
+                onClick={() => {
+                  setSelectedImage(false);
+                  handleClick();
+                }}
+                style={{ backgroundColor: 'rgba(1,1,1,0.5)' }}
+                className='flex items-center p-1 gap-2 text-white opacity-70 top-16 md:right-16 right-4 rounded-xl'
+              >
+                {/* <p className='text-white font-bold'>FECHAR</p> */}
+                <X className=' hover:text-zinc-800' size={32} />
+              </div>
+              {/* <CommentBox
               isOpen={!toggleCommentBoard}
               imageId={imageId}
               openCommentsBox={() => setToggleCommentBoard(true)}
@@ -391,6 +423,15 @@ export const PublicGallery = () => {
                 weight={`${like ? 'fill' : 'light'}`}
               />
             </div> */}
+            </div>
+          </div>
+          <div
+            onClick={nextImage}
+            className='h-40 flex items-center absolute opacity-40 right-5 md:-right-40'
+          >
+            <div className='bg-black text-white rounded-full p-2 text-xl md:text-6xl font-bold'>
+              <CaretRight />
+            </div>
           </div>
         </div>
       </div>

@@ -8,7 +8,7 @@ export const PublicAlbuns = () => {
   return (
     <div className='py-20'>
       <div className='pb-10 items-center flex justify-center w-full'>
-        <p>EVENTOS PRIVADOS</p>
+        <p>EVENTOS PÚBLICOS</p>
       </div>
 
       <div className='space-y-7 md:space-y-0 gap-10 md:grid-cols-4 md:grid'>
@@ -18,7 +18,7 @@ export const PublicAlbuns = () => {
               <SessionCard
                 keyPass={keyPass}
                 nav={() =>
-                  navigate(`/photography/private/${album}`, { state: { album, keyPass } })
+                  navigate(`/photography/private/${album}`, { state: { album, keyPass, alt } })
                 }
                 alt={alt}
                 title={album}

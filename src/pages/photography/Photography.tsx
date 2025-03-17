@@ -4,8 +4,8 @@ import { PublicAlbuns } from './components/PublicAlbuns';
 export const Photography = () => {
   return (
     <div>
-      <Portifolio />
       <PublicAlbuns />
+      <Portifolio />
     </div>
   );
 };

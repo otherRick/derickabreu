@@ -3,7 +3,6 @@
 
 import { useEffect, useState } from 'react';
 import { homeMedia } from '../../api/repository/downloadmedia';
-import { Footer } from '../../components/footer/Footer';
 
 export const Home = () => {
   const [imageUrl, setImageUrl] = useState<string[] | null>(null);
@@ -27,7 +26,7 @@ export const Home = () => {
       <div className='bg-black py-44 px-20 space-y-8 text-gray-500'>
         <p className='md:text-6xl text-4xl'>Derick Abreu</p>
         <div className='text-lg break-words'>
-          <p className='md:first: md:text-4xl text-3xl'>Fotógrafo, editor e desevolvedor</p>
+          <p className='md:first: md:text-4xl text-3xl'>Fotógrafo,</p>
           <p className='text-md'>
             brasileiro com mais de 12 anos de experiência no mercado da fotografia digital e
             domínio das pricipais ferramentas de edição e correção de imagens e{' '}
@@ -36,7 +35,6 @@ export const Home = () => {
             </a>
           </p>
         </div>
-        <Footer black />
       </div>
     </div>
   );

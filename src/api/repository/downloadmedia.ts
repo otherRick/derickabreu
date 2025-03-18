@@ -1,4 +1,4 @@
-import { getDownloadURL, ref } from 'firebase/storage';
+import { getDownloadURL, getStorage, listAll, ref } from 'firebase/storage';
 import { bucket } from '../database';
 
 export const downloadMedia = async (files: string[] | string) => {
@@ -18,6 +18,27 @@ export const downloadMedia = async (files: string[] | string) => {
     return null;
   }
 };
+
+export const downloadAllPublicAlbuns = async (album: string) => {
+  try {
+    const storage = getStorage();
+    const directoryRef = ref(storage, `/${album}`);
+
+    const result = await listAll(directoryRef);
+
+    const downloadURLs = await Promise.all(
+      result.items.map(async (itemRef) => {
+        return await getDownloadURL(itemRef);
+      })
+    );
+
+    return downloadURLs;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
 export const homeMedia = async (files: string[] | string) => {
   try {
     const filesArray = Array.isArray(files) ? files : [files];

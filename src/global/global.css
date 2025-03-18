@@ -10,7 +10,7 @@
 }
 
 .image-grid img:hover {
-  transform: scale(1.01);
+  transform: scale(1.04);
 }
 .image-grid img {
   transition: transform 0.3s ease-in-out;
@@ -34,4 +34,62 @@
 body {
   font-family: 'Lato', sans-serif;
   font-weight: 300; /* Opcional: Defina o peso da fonte desejado */
+}
+
+/* Estilizando a borda de todos os blocos */
+.opt-container > div {
+}
+
+/* Estilizando a borda do bloco em foco */
+.opt-container > div:focus-within {
+  border-color: black !important;
+}
+
+.menu-container {
+  position: fixed; /* Ensures the menu stays positioned over the content */
+  top: 1;
+  left: 0; /* Starts on the right side, initially visible */
+  transition: left 0.3s ease; /* Smooth transition on right property change */
+  /* Additional styles for better appearance (optional) */
+  background-color: white; /* Customize background color */
+  width: 280px; /* Set desired menu width */
+  height: 65%; /* Set desired menu width */
+  z-index: 10; /* Ensure menu appears on top of other elements */
+}
+
+.menu-container.open {
+  left: -17.5rem; /* Slides out to the left when closed */
+}
+
+.menu-comments-container {
+  position: fixed; /* Ensures the menu stays positioned over the content */
+  top: 1;
+  left: 0; /* Starts on the right side, initially visible */
+  transition: left 0.3s ease; /* Smooth transition on right property change */
+  /* Additional styles for better appearance (optional) */
+  background-color: white; /* Customize background color */
+  width: 330px; /* Set desired menu width */
+  height: 70%; /* Set desired menu width */
+  z-index: 10; /* Ensure menu appears on top of other elements */
+}
+
+.menu-comments-container.open {
+  left: -21rem; /* Slides out to the left when closed */
+}
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+
+.text-xxs {
+  font-size: 0.5rem; /* ou o tamanho desejado */
+  /* outras propriedades de estilo, se necessário */
 }

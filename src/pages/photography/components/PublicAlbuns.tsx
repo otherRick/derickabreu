@@ -12,17 +12,20 @@ export const PublicAlbuns = () => {
       </div>
 
       <div className='space-y-7 md:space-y-0 gap-10 md:grid-cols-4 md:grid'>
-        {photosession.map(({ alt, album, src, keyPass }) => {
+        {photosession.map(({ alt, album, src, keyPass, payToview }) => {
           return (
             <>
               <SessionCard
                 keyPass={keyPass}
                 nav={() =>
-                  navigate(`/photography/private/${album}`, { state: { album, keyPass, alt } })
+                  navigate(`/photography/private/${album}`, {
+                    state: { album, keyPass, alt, payToview }
+                  })
                 }
                 alt={alt}
                 title={album}
                 src={src}
+                onClick={() => {}}
               />
             </>
           );

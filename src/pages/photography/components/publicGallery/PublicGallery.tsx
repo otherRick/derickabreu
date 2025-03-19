@@ -10,10 +10,12 @@ import { whatsappSander } from '../../../../utils/whatsappSender';
 import { FormModalKey } from '../../../../components/modals/formModal/FormModalKey';
 import { downloadIgm } from '../../utils/downloadImg';
 import { ScrollToTopButton } from '../../../../components/scrollToTopButton/ScrollToTopButton';
+import { extractFileName } from '../../../../utils/extractFileName';
 
 export const PublicGallery = () => {
   const [fullImage, setFullImage] = useState<Promise<Response> | string | URL | Request>();
-  const [selectedImage, setSelectedImage] = useState(false);
+  const [openCarousel, setOpenCarousel] = useState(false);
+  const [fileName, setFileName] = useState('');
   const [openLogin, setOpenLogin] = useState(false);
   const [albumKey, setAlbumKey] = useState('');
 
@@ -68,7 +70,8 @@ export const PublicGallery = () => {
               <img
                 onClick={() => {
                   setFullImage(url);
-                  setSelectedImage(true);
+                  setOpenCarousel(true);
+                  setFileName(extractFileName(url));
                 }}
                 src={url}
                 className='w-full rounded-lg break-inside-avoid'
@@ -86,14 +89,13 @@ export const PublicGallery = () => {
         downloadImage={() => downloadIgm(fullImage as string)}
         foundAlbum={foundAlbum}
         imageUrls={imageUrls}
-        onBuyItemClick={() => whatsappSander(fullImage as URL)}
+        onBuyItemClick={() => whatsappSander(fileName)}
         onClose={() => {
-          setSelectedImage(false);
+          setOpenCarousel(false);
         }}
-        selectedImage={selectedImage}
-        src={fullImage}
+        selectedImage={{ url: fullImage, alt: `Downloaded Media ${'fullImage'}`, name: fileName }}
+        open={openCarousel}
         payToview={payToview}
-        alt={`Downloaded Media ${'fullImage'}`}
       />
     </div>
   );

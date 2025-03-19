@@ -17,8 +17,9 @@ export const useFetchAlbumImages = ({ keyPass, alt, albumName }: UseFetchAlbumIm
 
     const fetchData = async (passKey: string) => {
       try {
-        const urls = await downloadAllPublicAlbuns(passKey);
-        setImageUrls(urls as []);
+        const imgData = await downloadAllPublicAlbuns(passKey);
+
+        setImageUrls(imgData as []);
       } catch (error) {
         console.error('Error fetching media:', error);
       }

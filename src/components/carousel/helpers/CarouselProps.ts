@@ -1,13 +1,17 @@
 import { photosession } from '../../../pages/photography/helpers/photosession';
 
+export interface selectedImageProps {
+  url: string | URL | Request | undefined | Promise<Response>;
+  name: string;
+  alt: string;
+}
 export interface CarouselProps {
-  selectedImage: boolean;
-  src: string | URL | Request | undefined | Promise<Response>;
+  open: boolean;
+  selectedImage: selectedImageProps;
   imageUrls: string[];
   onBuyItemClick: () => void;
   foundAlbum: (typeof photosession)[number] | undefined;
   downloadImage: () => void;
   onClose: () => void;
-  alt: string;
   payToview: boolean;
 }

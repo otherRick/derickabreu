@@ -2,12 +2,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import userProfileData from '../pages/login/slices/loginSlices';
 import singleImageData from '../pages/photography/slices/imageSlices';
 import scrollingToggle from '../components/layout/slices/layoutSlices';
+import cartManager from '../pages/photography/slices/cartSlice';
 
 export const store = configureStore({
   reducer: {
     profile: userProfileData,
     imageData: singleImageData,
-    layout: scrollingToggle
+    layout: scrollingToggle,
+    cart: cartManager
   }
 });
 

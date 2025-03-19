@@ -5,13 +5,15 @@ import JSZip from 'jszip';
 import { downloadAllPublicAlbuns } from '../../../../api/repository/downloadmedia';
 import { useEffect, useState } from 'react';
 import { photosession } from '../../helpers/photosession';
+import { ShoppingCart } from '@phosphor-icons/react';
+import { FolderArrowDownIcon } from '@heroicons/react/24/outline';
 
 export const PrivateAlbumBlank = () => {
   const [imageUrls, setImageUrls] = useState<[string]>(['']);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { album } = location.state || {};
+  const { album, payToview } = location.state || {};
 
   const urlLength = location.pathname.split('/').length;
   const decodedAlbumName = decodeURIComponent(location.pathname.split('/')[urlLength - 1]);
@@ -69,12 +71,20 @@ export const PrivateAlbumBlank = () => {
         <div className='items-center flex w-1/3 justify-center'>
           <p>{album ? album : foundAlbum?.album}</p>
         </div>
-        <div
-          onClick={() => downloadImagesAsZip(imageUrls)}
-          className='items-center flex w-1/3 justify-center flex-col cursor-pointer'
-        >
-          {/* <FolderArrowDownIcon className='w-8 text-zinc-400 hover:text-zinc-800' />
-          <p>baixar pasta</p> */}
+        <div className={`items-center flex w-1/3 justify-center flex-col`}>
+          {payToview ? (
+            <ShoppingCart
+              onClick={() => downloadImagesAsZip(imageUrls)}
+              size={20}
+              weight='bold'
+              className=' text-zinc-400 hover:text-zinc-800 w-10 h-10 p-2 cursor-pointer'
+            />
+          ) : (
+            <FolderArrowDownIcon
+              onClick={() => downloadImagesAsZip(imageUrls)}
+              className=' text-zinc-400 hover:text-zinc-800  w-10 h-10 p-2 cursor-pointer'
+            />
+          )}
         </div>
       </div>
       <PublicGallery />

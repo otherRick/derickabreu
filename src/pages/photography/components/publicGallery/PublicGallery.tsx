@@ -1,48 +1,38 @@
-import { SetStateAction, useEffect, useState } from 'react';
-import { Button, Modal } from 'flowbite-react';
+import { SetStateAction, useState } from 'react';
 
 import { LoginSMS } from '../../../login/loginSMS';
 import { downloadAllPublicAlbuns } from '../../../../api/repository/downloadmedia';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { photosession } from '../../helpers/photosession';
 import { Carousel } from '../../../../components/carousel/Carousel';
+import { useFetchAlbumImages } from '../../../../hooks/useFetchAlbumImg';
+import { whatsappSander } from '../../../../utils/whatsappSender';
+import { FormModalKey } from '../../../../components/modals/formModal/FormModalKey';
+import { downloadIgm } from '../../utils/downloadImg';
+import { ScrollToTopButton } from '../../../../components/scrollToTopButton/ScrollToTopButton';
 
 export const PublicGallery = () => {
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [fullImage, setFullImage] = useState<Promise<Response> | string | URL | Request>();
   const [selectedImage, setSelectedImage] = useState(false);
   const [openLogin, setOpenLogin] = useState(false);
-  const [imageId, setImageId] = useState('');
-  const [openModal, setOpenModal] = useState<boolean>(false);
   const [albumKey, setAlbumKey] = useState('');
 
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { keyPass, alt } = location.state || {};
+  const { keyPass, alt, payToview } = location.state || {};
 
   const urlLength = location.pathname.split('/').length;
   const decodedAlbumName = decodeURIComponent(location.pathname.split('/')[urlLength - 1]);
   const foundAlbum = photosession.find((item) => item.album === decodedAlbumName);
 
-  useEffect(() => {
-    if (keyPass === '' && !foundAlbum?.locked) {
-      const fetchData = async () => {
-        try {
-          const urls = await downloadAllPublicAlbuns(alt);
-          setImageUrls(urls as SetStateAction<string[]>);
-        } catch (error) {
-          console.error('Error fetching media:', error);
-        }
-      };
+  const albumName = foundAlbum?.album;
 
-      fetchData();
-    } else if (keyPass === '' && foundAlbum?.locked) {
-      setOpenModal(true);
-    } else {
-      setOpenModal(true);
-    }
-  }, []);
+  const { imageUrls, openModal, setOpenModal, setImageUrls } = useFetchAlbumImages({
+    keyPass,
+    alt,
+    albumName
+  });
 
   const handleEnterKey = async () => {
     try {
@@ -56,72 +46,20 @@ export const PublicGallery = () => {
     }
   };
 
-  const getImgId = (url: string) => {
-    const filenameWithParams = url.substring(url.lastIndexOf('/') + 1);
-
-    const filename = filenameWithParams.split('?')[0];
-
-    setImageId(filename.slice(7).split('.')[0]);
-  };
-
-  const decoded = decodeURIComponent(imageId);
-  const cleanName = decoded.replace(/^os\//, '');
-
-  const downloadImage = async () => {
-    try {
-      const response = await fetch(fullImage as string);
-      const blob = await response.blob();
-
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = cleanName;
-
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      URL.revokeObjectURL(link.href);
-    } catch (error) {
-      console.error('Download failed:', error);
-    }
-  };
-
-  const handleSendWhatsapp = () => {
-    const numeroTelefone = '5521973621887';
-    const extractFileName = () => {
-      const urlObj = new URL(fullImage as URL);
-      const pathname = urlObj.pathname;
-      const fileName = pathname.split('/').pop();
-      return fileName || '';
-    };
-
-    const mensagem = `Gostaria de comprar esta imagem:%0A${extractFileName()}`;
-    const link = `https://api.whatsapp.com/send?phone=${numeroTelefone}&text=${mensagem}`;
-
-    window.open(link, '_blank');
-  };
-
   return (
     <div className='relative'>
       <LoginSMS open={openLogin} closeLogin={() => setOpenLogin(false)} />
-      <Modal
+
+      <FormModalKey
+        albumKey={albumKey}
+        name={foundAlbum?.album}
+        onChange={(e) => setAlbumKey(e)}
         onClose={() => {
           setOpenModal(false), navigate('/photography');
         }}
-        show={openModal}
-      >
-        <Modal.Header>{foundAlbum?.album}</Modal.Header>
-        <Modal.Body>
-          <div className='flex flex-col'>
-            <p>Enter Key</p>
-            <input value={albumKey} onChange={(e) => setAlbumKey(e.target.value)} type='text' />
-            <Button onClick={handleEnterKey}>Entrar</Button>
-            <a className='underline' href='/photography'>
-              fechar
-            </a>
-          </div>
-        </Modal.Body>
-      </Modal>
+        onConfirm={handleEnterKey}
+        openModal={openModal}
+      />
 
       <div>
         {imageUrls?.length !== 0 ? (
@@ -131,7 +69,6 @@ export const PublicGallery = () => {
                 onClick={() => {
                   setFullImage(url);
                   setSelectedImage(true);
-                  getImgId(url);
                 }}
                 src={url}
                 className='w-full rounded-lg break-inside-avoid'
@@ -144,16 +81,18 @@ export const PublicGallery = () => {
           <p>Loading...</p>
         )}
       </div>
+      <ScrollToTopButton />
       <Carousel
-        downloadImage={downloadImage}
+        downloadImage={() => downloadIgm(fullImage as string)}
         foundAlbum={foundAlbum}
         imageUrls={imageUrls}
-        onBuyItemClick={handleSendWhatsapp}
+        onBuyItemClick={() => whatsappSander(fullImage as URL)}
         onClose={() => {
           setSelectedImage(false);
         }}
         selectedImage={selectedImage}
         src={fullImage}
+        payToview={payToview}
         alt={`Downloaded Media ${'fullImage'}`}
       />
     </div>

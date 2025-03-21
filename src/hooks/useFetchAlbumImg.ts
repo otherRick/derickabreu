@@ -9,7 +9,7 @@ interface UseFetchAlbumImagesProps {
 }
 
 export const useFetchAlbumImages = ({ keyPass, alt, albumName }: UseFetchAlbumImagesProps) => {
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [allImgData, setAllImgData] = useState<[]>([]);
   const [openModal, setOpenModal] = useState<boolean>(false);
 
   useEffect(() => {
@@ -17,9 +17,9 @@ export const useFetchAlbumImages = ({ keyPass, alt, albumName }: UseFetchAlbumIm
 
     const fetchData = async (passKey: string) => {
       try {
-        const imgData = await downloadAllPublicAlbuns(passKey);
+        const allImgData = await downloadAllPublicAlbuns(passKey);
 
-        setImageUrls(imgData as []);
+        setAllImgData(allImgData as []);
       } catch (error) {
         console.error('Error fetching media:', error);
       }
@@ -36,5 +36,5 @@ export const useFetchAlbumImages = ({ keyPass, alt, albumName }: UseFetchAlbumIm
     }
   }, [keyPass, alt, albumName]);
 
-  return { imageUrls, openModal, setOpenModal, setImageUrls };
+  return { allImgData, openModal, setOpenModal, setAllImgData };
 };

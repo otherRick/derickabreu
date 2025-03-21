@@ -1,6 +1,11 @@
 import { getDownloadURL, getStorage, listAll, ref } from 'firebase/storage';
 import { bucket } from '../database';
 
+export interface ImageFileProps {
+  name: string;
+  url: string;
+}
+
 export const downloadMedia = async (files: string[] | string) => {
   try {
     const filesArray = Array.isArray(files) ? files : [files];
@@ -26,19 +31,22 @@ export const downloadAllPublicAlbuns = async (album: string) => {
 
     const result = await listAll(directoryRef);
 
-    const downloadURLs = await Promise.all(
+    const files: ImageFileProps[] = await Promise.all(
       result.items.map(async (itemRef) => {
-        return await getDownloadURL(itemRef);
+        const url = await getDownloadURL(itemRef);
+        return {
+          name: itemRef?.name?.split('.')[0],
+          url: url
+        };
       })
     );
 
-    return downloadURLs;
+    return files;
   } catch (error) {
     console.error(error);
     return null;
   }
 };
-
 export const homeMedia = async (files: string[] | string) => {
   try {
     const filesArray = Array.isArray(files) ? files : [files];

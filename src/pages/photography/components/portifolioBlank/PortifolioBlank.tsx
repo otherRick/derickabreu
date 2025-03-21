@@ -6,8 +6,6 @@ export const PortifolioBlank = () => {
   const { photoTitle, album } = location.state || {};
   const navigate = useNavigate();
 
-  console.log(photoTitle);
-
   return (
     <div>
       <div className='bg-zinc-100 py-10 flex justify-center'>

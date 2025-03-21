@@ -1,13 +1,5 @@
 export const photosession = [
   {
-    alt: 'crochetudo',
-    album: 'Crochê Teste',
-    locked: false,
-    keyPass: '',
-    payToview: true,
-    src: 'https://i.ytimg.com/vi/1TfJBIohRNE/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCEoOfsk_G9_vb6xXC3k9qaz-6VTQ'
-  },
-  {
     alt: 'aulao',
     album: 'Aulão DO IT X DH8',
     locked: false,

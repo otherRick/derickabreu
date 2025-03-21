@@ -1,13 +1,19 @@
-import { ShoppingCartSimple } from '@phosphor-icons/react';
+import { photosession } from '../../../pages/photography/helpers/photosession';
+import { CartDropdown } from '../../dropdowns/CartDropdown';
 
-export const CartHeader = ({ show }: { show: boolean }) => {
+interface CartHeaderProps {
+  album: (typeof photosession)[number] | undefined;
+  show: boolean;
+}
+
+export const CartHeader = ({ show, album }: CartHeaderProps) => {
   return (
     <div
       className={` ${
         !show && 'hidden'
-      } absolute text-zinc-200 top-0 w-full py-4 px-10 flex items-end justify-end`}
+      } absolute text-zinc-200 top-0 w-full py-4 px-40 flex items-end md:justify-end justify-center`}
     >
-      <ShoppingCartSimple weight='bold' className='text-3xl' />
+      <CartDropdown album={album} />
     </div>
   );
 };

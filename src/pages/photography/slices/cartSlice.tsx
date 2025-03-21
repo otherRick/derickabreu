@@ -1,33 +1,40 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface filesProps {
-  url: string;
-  title: string;
-  price: number;
+export interface addedFilesProps {
+  url?: string;
+  name?: string;
+  price?: number;
 }
 
-interface initialStateProps {
-  files: filesProps;
+interface InitialStateProps {
+  files: addedFilesProps[];
   totalPrice: number;
   user: string;
 }
 
-const initialState: initialStateProps = {
-  files: { url: '', title: '', price: 0 },
+const initialState: InitialStateProps = {
+  files: [],
   totalPrice: 0,
   user: ''
 };
 
 export const cartManager = createSlice({
-  initialState,
   name: 'Cart-manager',
+  initialState,
   reducers: {
-    addCart: (state, action) => {
-      state.files = action.payload;
+    addCart: (state, action: PayloadAction<addedFilesProps>) => {
+      state.files.push(action.payload);
+      state.totalPrice += action.payload.price;
+    },
+    removeCart: (state, action: PayloadAction<string>) => {
+      const index = state.files.findIndex((item) => item.name === action.payload);
+      if (index !== -1) {
+        state.totalPrice -= state.files[index].price || 0;
+        state.files.splice(index, 1); // Remove o item encontrado
+      }
     }
   }
 });
 
-export const { addCart } = cartManager.actions;
-
+export const { addCart, removeCart } = cartManager.actions;
 export default cartManager.reducer;

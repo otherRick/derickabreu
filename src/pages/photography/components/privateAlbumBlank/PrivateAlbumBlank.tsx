@@ -5,8 +5,8 @@ import JSZip from 'jszip';
 import { downloadAllPublicAlbuns } from '../../../../api/repository/downloadmedia';
 import { useEffect, useState } from 'react';
 import { photosession } from '../../helpers/photosession';
-import { ShoppingCart } from '@phosphor-icons/react';
 import { FolderArrowDownIcon } from '@heroicons/react/24/outline';
+import { CartDropdown } from '../../../../components/dropdowns/CartDropdown';
 
 export const PrivateAlbumBlank = () => {
   const [imageUrls, setImageUrls] = useState<[string]>(['']);
@@ -73,12 +73,15 @@ export const PrivateAlbumBlank = () => {
         </div>
         <div className={`items-center flex w-1/3 justify-center flex-col`}>
           {payToview ? (
-            <ShoppingCart
-              onClick={() => downloadImagesAsZip(imageUrls)}
-              size={20}
-              weight='bold'
-              className=' text-zinc-400 hover:text-zinc-800 w-10 h-10 p-2 cursor-pointer'
-            />
+            <div>
+              {/* <ShoppingCart
+                onClick={() => downloadImagesAsZip(imageUrls)}
+                size={20}
+                weight='bold'
+                className=' text-zinc-400 hover:text-zinc-800 w-10 h-10 p-2 cursor-pointer'
+              /> */}
+              <CartDropdown album={foundAlbum} />
+            </div>
           ) : (
             <FolderArrowDownIcon
               onClick={() => downloadImagesAsZip(imageUrls)}

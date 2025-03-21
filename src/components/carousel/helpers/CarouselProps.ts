@@ -1,3 +1,4 @@
+import { ImageFileProps } from '../../../api/repository/downloadmedia';
 import { photosession } from '../../../pages/photography/helpers/photosession';
 
 export interface selectedImageProps {
@@ -7,9 +8,8 @@ export interface selectedImageProps {
 }
 export interface CarouselProps {
   open: boolean;
-  selectedImage: selectedImageProps;
-  imageUrls: string[];
-  onBuyItemClick: () => void;
+  selectedImage?: ImageFileProps;
+  allImgData: ImageFileProps[];
   foundAlbum: (typeof photosession)[number] | undefined;
   downloadImage: () => void;
   onClose: () => void;

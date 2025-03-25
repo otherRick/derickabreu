@@ -3,9 +3,9 @@ import { photosession } from '../pages/photography/helpers/photosession';
 import { downloadAllPublicAlbuns } from '../api/repository/downloadmedia';
 
 interface UseFetchAlbumImagesProps {
-  keyPass: string;
-  alt: string;
-  albumName: string | undefined;
+  keyPass?: string;
+  alt?: string;
+  albumName?: string | undefined;
 }
 
 export const useFetchAlbumImages = ({ keyPass, alt, albumName }: UseFetchAlbumImagesProps) => {

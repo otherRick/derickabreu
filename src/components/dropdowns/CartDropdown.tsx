@@ -38,9 +38,11 @@ export const CartDropdown = ({ album }: CartDropdownProps) => {
       .map((item: { name: string; price: number }) => `- ${item.name}, R$${item.price}`)
       .join('%0A');
     whatsappSander(
-      `${itemsString} %0A> Valor total: ${brlConverter(cartItems.totalPrice)} %0A> Valor com ${
-        priceInDiscont().amount
-      } de desconto = *${brlConverter(priceInDiscont().value)}*`
+      `Gostaria de comprar esta(s) imagem(s):${itemsString} %0A> Valor total: ${brlConverter(
+        cartItems.totalPrice
+      )} %0A> Valor com ${priceInDiscont().amount} de desconto = *${brlConverter(
+        priceInDiscont().value
+      )}*`
     );
   };
 

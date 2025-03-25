@@ -6,7 +6,8 @@ import { Contract } from '../pages/contract/Contract';
 import { ProfileUser } from '../pages/profile/profileUser';
 import { Photography } from '../pages/photography/Photography';
 import { PortifolioBlank } from '../pages/photography/components/portifolioBlank/PortifolioBlank';
-import { PrivateAlbumBlank } from '../pages/photography/components/privateAlbumBlank/PrivateAlbumBlank';
+import { PrivateAlbumBlank } from '../pages/photography/components/privateAlbumBlank/AlbumWrap';
+import { PublicGallery } from '../pages/photography/components/publicGallery/PublicGallery';
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ export const router = createBrowserRouter([
       {
         path: '/photography',
         element: <Photography />
+      },
+      {
+        path: '/photography/private',
+        element: <PublicGallery />
       },
       {
         path: '/about',
@@ -39,7 +44,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/photography/private/:albumKey',
-        element: <PrivateAlbumBlank />
+        element: <PublicGallery />
       }
     ]
   }

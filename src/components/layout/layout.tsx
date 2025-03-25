@@ -95,6 +95,11 @@ export default function Layout() {
               {user ? user : 'CLIENTE'}
             </p>
           </Link> */}
+          <Link to='/photography/private' className='hover:text-gray-300 text-yellow-700'>
+            <p className={location.pathname === '/photography/private' ? 'text-gray-400' : ''}>
+              {user ? user : 'CLIENTE'}
+            </p>
+          </Link>
         </div>
       </div>
 

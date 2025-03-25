@@ -136,8 +136,6 @@ export const PortifoliGallery = ({ sessions }) => {
 
     const imageRef = ref(db, `images/${imageId}/likes/${userId}`);
 
-    console.log('imageRef', imageRef);
-
     if (like) {
       set(imageRef, null).catch((error) => {
         console.error('Erro ao remover a curtida:', error);
